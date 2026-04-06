@@ -1,4 +1,4 @@
-# Dr. Chan-Lin Chu - CV and Licenses
+# Dr. Chan-Lin Chu - Licenses
 
 ## 01 / Core Licensure and Specialty / 核心執照與專科
 - 考試及格證書.jpg
