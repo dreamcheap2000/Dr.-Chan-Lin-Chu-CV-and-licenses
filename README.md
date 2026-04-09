@@ -1,3 +1,23 @@
+# Dr. Chan Lin Chu - CV and Licenses
+
+<!-- AUTO-GENERATED:START -->
+
+## 專業證照與訓練（重點一覽）
+
+| 分類 | 內容（重點） |
+|---|---|
+| ![核心執照與專科資格](https://img.shields.io/badge/分類-核心執照與專科資格-1f77b4) | 醫師考試及格證明；神經重症照護認證；神經科專科醫師證書；醫師證書 |
+| ![神經調控](https://img.shields.io/badge/分類-神經調控-ff7f0e) | 慢性偏頭痛肉毒桿菌毒素注射訓練證明；TMS 秋季研討會證書；TMS／EEG 生物標記工作坊證書；國際臨床TMS認證專家證書；TMS 春季研討會證書；VNS 參數設定與劑量調整認證；tPBM 臨床證書 |
+| ![腦血管與介入](https://img.shields.io/badge/分類-腦血管與介入-2ca02c) | 急性缺血性取中風經動脈取栓術資格證書；介入性神經血管內治療證書；台灣神經介入學會（TSNIS）腦動脈瘤線圈栓塞課程證書 |
+| ![超音波（多系統）](https://img.shields.io/badge/分類-超音波%EF%BC%88多系統%EF%BC%89-d62728) | 腸胃超音波進階課程證書；肌肉骨骼超音波（USMSIT）台灣工作坊證書；神經超音波進階課程證書；神經肌肉超音波（NMUSIT）台灣工作坊證書；疼痛治療超音波證書 |
+| ![急性照護](https://img.shields.io/badge/分類-急性照護-9467bd) | 急性神經生命支持（ANLS）證書 |
+| ![居家照護／長照／社區／慢性病防治](https://img.shields.io/badge/分類-居家照護／長照／社區／慢性病防治-8c564b) | 成人預防保健資格證明；糖尿病共同照護資格；居家失能評估（跨專業）；居家失能評估（意見書）；居家醫療照護專業人員認證；在宅急症照護（Hospital at Home）試辦證書；長期照護 Level 1 證書；骨質疏鬆專科醫師證書；安寧緩和照護基礎課程證書；戒菸衛教／戒菸諮詢資格證明 |
+| ![法規與管制](https://img.shields.io/badge/分類-法規與管制-e377c2) | 管制藥品訓練證明；複方（FuFang）證書 |
+| ![進階治療](https://img.shields.io/badge/分類-進階治療-7f7f7f) | 細胞治療醫師訓練證明（第115年） |
+| ![學歷與服務](https://img.shields.io/badge/分類-學歷與服務-17becf) | 大學畢業證書 |
+
+<!-- AUTO-GENERATED:END -->
+
 ## 1 核心執照與專科資格（01_Core_Licensure_and_Specialty）
 - 醫師考試及格證明
 - 神經重症照護認證
