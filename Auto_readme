@@ -1,0 +1,372 @@
+以下是你需要新增/修改的檔案內容（共 4 份）：Workflow、產生器腳本、翻譯字典、README 範本區塊。你照著路徑建立檔案並貼上內容即可。
+
+---
+
+## 1) `.github/workflows/update-readme.yml`
+
+```yml name=.github/workflows/update-readme.yml
+name: Update README (auto-generated expertise summary)
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "01_*/*"
+      - "02_*/*"
+      - "03_*/*"
+      - "04_*/*"
+      - "05_*/*"
+      - "06_*/*"
+      - "07_*/*"
+      - "08_*/*"
+      - "09_*/*"
+      - "scripts/**"
+      - ".github/translations.yml"
+      - "README.md"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate README section
+        run: |
+          python scripts/generate_readme_section.py
+
+      - name: Commit changes (if any)
+        run: |
+          set -e
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md .github/translations.yml
+          git commit -m "chore: auto-update README expertise summary"
+          git push
+```
+
+---
+
+## 2) `scripts/generate_readme_section.py`
+
+```python name=scripts/generate_readme_section.py
+from __future__ import annotations
+
+import os
+import re
+from pathlib import Path
+
+try:
+    import yaml  # pyyaml
+except Exception as e:
+    raise SystemExit(
+        "Missing dependency: pyyaml. Add it by creating requirements, or vendor a tiny YAML reader.\n"
+        "Fast fix: create scripts/requirements.txt with 'pyyaml' and install in workflow."
+    ) from e
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+README_PATH = REPO_ROOT / "README.md"
+DICT_PATH = REPO_ROOT / ".github" / "translations.yml"
+
+START_MARK = "<!-- AUTO-GENERATED:START -->"
+END_MARK = "<!-- AUTO-GENERATED:END -->"
+
+EXT_TO_STRIP = {".jpg", ".jpeg", ".png", ".pdf"}  # display: no extension anyway
+
+
+def strip_ext(filename: str) -> str:
+    p = Path(filename)
+    if p.suffix.lower() in EXT_TO_STRIP:
+        return p.stem
+    # if unknown extension, still strip for display consistency
+    return p.stem
+
+
+def humanize_fallback(key: str) -> str:
+    # Replace underscores with spaces; keep common acronyms readable.
+    s = key.replace("_", " ").strip()
+    # minor cleanup
+    s = re.sub(r"\s+", " ", s)
+    return f"{s}（未翻譯）"
+
+
+def load_dict() -> dict:
+    if not DICT_PATH.exists():
+        return {}
+    with DICT_PATH.open("r", encoding="utf-8") as f:
+        return yaml.safe_load(f) or {}
+
+
+def save_dict(data: dict) -> None:
+    DICT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with DICT_PATH.open("w", encoding="utf-8") as f:
+        yaml.safe_dump(data, f, allow_unicode=True, sort_keys=False)
+
+
+def list_category_dirs() -> list[Path]:
+    # expect 01_... to 09_...
+    dirs = []
+    for p in sorted(REPO_ROOT.iterdir()):
+        if p.is_dir() and re.match(r"^(0[1-9])_", p.name):
+            dirs.append(p)
+    return dirs
+
+
+def build_markdown_section(data: dict) -> tuple[str, list[str]]:
+    categories = data.get("categories", {})
+    translations = data.get("files", {})
+
+    # A fixed color palette (badge colors)
+    colors = [
+        "1f77b4",  # blue
+        "ff7f0e",  # orange
+        "2ca02c",  # green
+        "d62728",  # red
+        "9467bd",  # purple
+        "8c564b",  # brown
+        "e377c2",  # pink
+        "7f7f7f",  # gray
+        "17becf",  # cyan
+    ]
+
+    missing: list[str] = []
+
+    rows = []
+    cat_dirs = list_category_dirs()
+
+    for idx, d in enumerate(cat_dirs):
+        cat_key = d.name
+        cat_title = categories.get(cat_key, cat_key)  # chinese title preferred
+
+        # Collect file names (non-recursive for now)
+        files = [p for p in sorted(d.iterdir()) if p.is_file()]
+        items_zh = []
+        for fp in files:
+            base = strip_ext(fp.name)
+            zh = translations.get(base)
+            if not zh:
+                missing.append(base)
+                zh = humanize_fallback(base)
+            items_zh.append(zh)
+
+        color = colors[idx % len(colors)]
+        # Use shields badge (stable on GitHub)
+        badge_label = "分類"
+        badge_msg = cat_title
+        # shields expects URL-escaped pieces; keep it simple by replacing spaces with %20
+        def esc(s: str) -> str:
+            return (
+                s.replace("-", "--")
+                 .replace("_", "__")
+                 .replace(" ", "%20")
+                 .replace("/", "%2F")
+                 .replace("（", "%EF%BC%88")
+                 .replace("）", "%EF%BC%89")
+            )
+
+        badge = f"![{cat_title}](https://img.shields.io/badge/{esc(badge_label)}-{esc(badge_msg)}-{color})"
+        content = "；".join(items_zh) if items_zh else "（無）"
+        rows.append(f"| {badge} | {content} |")
+
+    section = "\n".join(
+        [
+            "## 專業證照與訓練（重點一覽）",
+            "",
+            "| 分類 | 內容（重點） |",
+            "|---|---|",
+            *rows,
+            "",
+        ]
+    )
+    return section, missing
+
+
+def upsert_readme_section(readme_text: str, new_section: str) -> str:
+    if START_MARK in readme_text and END_MARK in readme_text:
+        before, rest = readme_text.split(START_MARK, 1)
+        middle, after = rest.split(END_MARK, 1)
+        return before + START_MARK + "\n\n" + new_section + "\n" + END_MARK + after
+
+    # If markers not found, append them at top
+    insert = f"{START_MARK}\n\n{new_section}\n{END_MARK}\n\n"
+    return insert + readme_text
+
+
+def main() -> None:
+    data = load_dict()
+
+    # Ensure base structure exists
+    data.setdefault("categories", {})
+    data.setdefault("files", {})
+
+    # Auto-fill category titles if missing (you can edit later)
+    default_categories_zh = {
+        "01_Core_Licensure_and_Specialty": "核心執照與專科資格",
+        "02_Neuromodulation_TMS_VNS_tPBM": "神經調控",
+        "03_Neurovascular_Endovascular": "腦血管與介入",
+        "04_Ultrasound_Multisystem": "超音波（多系統）",
+        "05_Acute_Care_Emergency": "急性照護",
+        "06_Home_Care_LongTermCare_Community": "居家照護／長照／社區／慢性病防治",
+        "07_Regulatory": "法規與管制",
+        "08_Advanced_Therapies_Cell_Therapy": "進階治療",
+        "09_Education_and_Service": "學歷與服務",
+    }
+    for k, v in default_categories_zh.items():
+        data["categories"].setdefault(k, v)
+
+    new_section, missing = build_markdown_section(data)
+
+    if not README_PATH.exists():
+        README_PATH.write_text("# Dr. Chan Lin Chu - CV and licenses\n\n", encoding="utf-8")
+
+    old = README_PATH.read_text(encoding="utf-8")
+    updated = upsert_readme_section(old, new_section)
+    README_PATH.write_text(updated, encoding="utf-8")
+
+    # Save dictionary (keeps categories normalized)
+    save_dict(data)
+
+    # Print missing translations in CI logs
+    if missing:
+        unique_missing = sorted(set(missing))
+        print("Missing translations (add to .github/translations.yml under files:):")
+        for k in unique_missing:
+            print(f" - {k}")
+        # Do not fail; just inform.
+    else:
+        print("All filenames translated.")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+重要：這個腳本用到 `pyyaml`，所以下面會提供 requirements。
+
+---
+
+## 3) `scripts/requirements.txt`
+
+```txt name=scripts/requirements.txt
+pyyaml==6.0.2
+```
+
+同時把 workflow 加一段安裝（請在 `Generate README section` 前面插入一步）：
+
+在 `.github/workflows/update-readme.yml` 的 `Setup Python` 後面加：
+
+```yml
+      - name: Install deps
+        run: |
+          pip install -r scripts/requirements.txt
+```
+
+---
+
+## 4) `.github/translations.yml`（初始字典：用你給的繁中）
+> 之後你新增檔案，如果 CI log 出現 Missing translations，就在這裡補一行即可。
+
+```yml name=.github/translations.yml
+categories:
+  01_Core_Licensure_and_Specialty: 核心執照與專科資格
+  02_Neuromodulation_TMS_VNS_tPBM: 神經調控
+  03_Neurovascular_Endovascular: 腦血管與介入
+  04_Ultrasound_Multisystem: 超音波（多系統）
+  05_Acute_Care_Emergency: 急性照護
+  06_Home_Care_LongTermCare_Community: 居家照護／長照／社區／慢性病防治
+  07_Regulatory: 法規與管制
+  08_Advanced_Therapies_Cell_Therapy: 進階治療
+  09_Education_and_Service: 學歷與服務
+
+files:
+  # 01
+  Exam_Pass_Certificate: 醫師考試及格證明
+  Neurocritical_Care_Certification: 神經重症照護認證
+  Neurology_Board_Certification: 神經科專科醫師證書
+  Physician_License: 醫師證書
+
+  # 02
+  Chronic_Migraine_Botulinum_Toxin_Injection_Certificate: 慢性偏頭痛肉毒桿菌毒素注射訓練證明
+  TMS_International_Clinical_Training_Certificate: 國際臨床TMS認證專家證書
+  TMS_Autumn_Symposium_Certificate: TMS 秋季研討會證書
+  TMS_EEG_Biomarker_Workshop_Certificate: TMS／EEG 生物標記工作坊證書
+  TMS_Spring_Symposium_Certificate: TMS 春季研討會證書
+  VNS_Programming_Parameter_Titration_Certification: VNS 參數設定與劑量調整認證
+  tPBM_Clinical_Certificate: tPBM 臨床證書
+
+  # 03
+  Mechanical_Thrombectomy_Certificate: 急性缺血性取中風經動脈取栓術資格證書
+  Neuroendovascular_Intervention_Certificate: 介入性神經血管內治療證書
+  TSNIS_Coil_Embolization_Certificate: 台灣神經介入學會（TSNIS）腦動脈瘤線圈栓塞課程證書
+
+  # 04
+  Ultrasound_GI_Advanced_Course_Certificate: 腸胃超音波進階課程證書
+  Ultrasound_MSK_USMSIT_Workshop_Taiwan_Certificate: 肌肉骨骼超音波（USMSIT）台灣工作坊證書
+  Ultrasound_Neuro_Advanced_Course_Certificate: 神經超音波進階課程證書
+  Ultrasound_Neuromuscular_NMUSIT_Workshop_Taiwan_Certificate: 神經肌肉超音波（NMUSIT）台灣工作坊證書
+  Ultrasound_Pain_Management_Certificate: 疼痛治療超音波證書
+
+  # 05
+  ANLS_Acute_Neurological_Life_Support_Certificate: 急性神經生命支持（ANLS）證書
+
+  # 06
+  Adult_Preventive_Health_Certificate: 成人預防保健資格證明
+  Diabetes_Shared_Care_Qualification: 糖尿病共同照護資格
+  Home_Disability_Assessment_Interprofessional: 居家失能評估（跨專業）
+  Home_Disability_Assessment_Opinion: 居家失能評估（意見書）
+  Home_Medical_Care_Professional_Certification: 居家醫療照護專業人員認證
+  Hospital_at_Home_Acute_Care_Pilot_Certificate: 在宅急症照護（Hospital at Home）試辦證書
+  Long_Term_Care_Level_1_Certificate: 長期照護 Level 1 證書
+  Osteoporosis_Specialist_Physician_Certificate: 骨質疏鬆專科醫師證書
+  Palliative_Care_Foundation_Course_Certificate: 安寧緩和照護基礎課程證書
+  Smoking_Cessation_Counseling_Certificate: 戒菸衛教／戒菸諮詢資格證明
+
+  # 07
+  Controlled_Substances_Certification: 管制藥品訓練證明
+  FuFang_Certificate: 複方（FuFang）證書
+
+  # 08
+  Cell_Therapy_Physician_Training_Certificate_Year115: 細胞治療醫師訓練證明（第115年）
+
+  # 09
+  Military_Service_Discharge_Certificate: 兵役退伍證明
+  University_Diploma: 大學畢業證書
+```
+
+---
+
+## 5) `README.md`（加入自動區塊標記）
+在 README 你想放的位置，加入這段「標記」。腳本會把內容塞在 START/END 中間：
+
+````markdown name=README.md
+<!-- AUTO-GENERATED:START -->
+<!-- AUTO-GENERATED:END -->
+````
+
+建議放在 README 開頭（例如標題下方），之後 Actions 會自動生成表格與彩色 badge。
+
+---
+
+## 你照做之後會看到什麼效果？
+- README 會出現一個「表格矩形」摘要（每行一個彩色 badge 分類）
+- 你上傳新證書檔案後，Actions 會自動更新那個表格
+- 若新檔名沒有翻譯，CI log 會列出 Missing translations，你再補到 `.github/translations.yml` 的 `files:` 下面即可
+
+---
+
+如果你願意，我也可以幫你把 **workflow 的 paths** 改成「只要 repo 有變更就跑」（更省事），或把內容欄再縮短（例如每類最多顯示 4 個，剩下顯示 `…等N項`），讓矩形更緊湊。你希望每個分類最多顯示幾個項目？
