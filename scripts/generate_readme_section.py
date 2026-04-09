@@ -5,7 +5,7 @@ from pathlib import Path
 
 try:
     import yaml  # pyyaml
-except Exception as e:
+except ImportError as e:
     raise SystemExit(
         "Missing dependency: pyyaml. "
         "Run: pip install -r scripts/requirements.txt"
