@@ -13,6 +13,9 @@ on:
       - "07_*/*"
       - "08_*/*"
       - "09_*/*"
+      - "10_Work_Experience/**"
+      - "publications/**"
+      - "projects/**"
       - "scripts/**"
       - ".github/translations.yml"
       - "README.md"
@@ -43,6 +46,7 @@ jobs:
 
       - name: Commit changes (if any)
         run: |
+          set -e
           if git diff --quiet; then
             echo "No changes to commit."
             exit 0
