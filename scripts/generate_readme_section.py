@@ -77,6 +77,28 @@ def split_bilingual(title: str) -> tuple[str, str]:
     return title.strip(), ""
 
 
+def find_category_title(categories: dict, dir_name: str) -> str:
+    """Map a folder name to its bilingual title from *categories*.
+
+    Folders and translation keys use the same ``NN_Suffix`` naming scheme, but
+    the numeric prefix occasionally differs between the actual folder and the
+    key stored in *translations.yml* (e.g. folder ``02_Neurovascular_Endovascular``
+    vs. key ``03_Neurovascular_Endovascular``).  This helper first tries an
+    exact match, then falls back to matching by the non-numeric suffix so that
+    categories 02/03/04 (and any future mismatches) are rendered with the
+    correct bilingual title instead of the raw folder name.
+    """
+    if dir_name in categories:
+        return categories[dir_name]
+
+    suffix = re.sub(r"^\d+_", "", dir_name)
+    for k, v in categories.items():
+        if re.sub(r"^\d+_", "", k) == suffix:
+            return v
+
+    return dir_name
+
+
 # ---------------------------------------------------------------------------
 # Section builders
 # ---------------------------------------------------------------------------
@@ -89,8 +111,7 @@ def build_certificates_section(data: dict) -> tuple[str, list[str]]:
     rows = []
 
     for idx, d in enumerate(list_certificate_dirs()):
-        cat_key = d.name
-        cat_title = categories.get(cat_key, cat_key)
+        cat_title = find_category_title(categories, d.name)
         zh_name, en_name = split_bilingual(cat_title)
 
         emoji = CAT_EMOJIS[idx % len(CAT_EMOJIS)]
