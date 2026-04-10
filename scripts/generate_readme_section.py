@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 import re
 from pathlib import Path
 
@@ -8,8 +7,7 @@ try:
     import yaml  # pyyaml
 except Exception as e:
     raise SystemExit(
-        "Missing dependency: pyyaml. Add it by creating requirements, or vendor a tiny YAML reader.\n"
-        "Fast fix: create scripts/requirements.txt with 'pyyaml' and install in workflow."
+        "Missing dependency: pyyaml. Install: pip install pyyaml"
     ) from e
 
 
@@ -20,30 +18,37 @@ DICT_PATH = REPO_ROOT / ".github" / "translations.yml"
 START_MARK = "<!-- AUTO-GENERATED:START -->"
 END_MARK = "<!-- AUTO-GENERATED:END -->"
 
-EXT_TO_STRIP = {".jpg", ".jpeg", ".png", ".pdf"}  # display: no extension anyway
+EXT_TO_STRIP = {".jpg", ".jpeg", ".png", ".pdf"}
 
+# Emoji color circles matching the original badge color palette (01–09)
+CAT_EMOJIS = ["🔵", "🟠", "🟢", "🔴", "🟣", "🟤", "🩷", "⚫", "🔷"]
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
 
 def strip_ext(filename: str) -> str:
     p = Path(filename)
-    if p.suffix.lower() in EXT_TO_STRIP:
-        return p.stem
-    # if unknown extension, still strip for display consistency
     return p.stem
 
 
 def humanize_fallback(key: str) -> str:
-    # Replace underscores with spaces; keep common acronyms readable.
     s = key.replace("_", " ").strip()
-    # minor cleanup
     s = re.sub(r"\s+", " ", s)
     return f"{s}（未翻譯）"
 
 
+def load_yaml(path: Path) -> dict | list | None:
+    if not path.exists():
+        return None
+    with path.open("r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
+
+
 def load_dict() -> dict:
-    if not DICT_PATH.exists():
-        return {}
-    with DICT_PATH.open("r", encoding="utf-8") as f:
-        return yaml.safe_load(f) or {}
+    data = load_yaml(DICT_PATH)
+    return data if isinstance(data, dict) else {}
 
 
 def save_dict(data: dict) -> None:
@@ -52,139 +57,248 @@ def save_dict(data: dict) -> None:
         yaml.safe_dump(data, f, allow_unicode=True, sort_keys=False)
 
 
-def list_category_dirs() -> list[Path]:
-    # expect 01_... to 09_...
+def list_certificate_dirs() -> list[Path]:
+    """Return certificate category dirs matching 01_… to 09_…"""
     dirs = []
     for p in sorted(REPO_ROOT.iterdir()):
-        if p.is_dir() and re.match(r"^(0[1-9])_", p.name):
+        if p.is_dir() and re.match(r"^0[1-9]_", p.name):
             dirs.append(p)
     return dirs
 
 
-def build_markdown_section(data: dict) -> tuple[str, list[str]]:
+def split_bilingual(title: str) -> tuple[str, str]:
+    """Split 'Chinese / English' into (zh, en) on the first ASCII slash.
+    Handles both '中文 / English' and '中文/ English' spacing variants.
+    Returns (title, '') if no ASCII slash separator found.
+    """
+    m = re.search(r'\s*/\s*', title)
+    if m:
+        return title[:m.start()].strip(), title[m.end():].strip()
+    return title.strip(), ""
+
+
+# ---------------------------------------------------------------------------
+# Section builders
+# ---------------------------------------------------------------------------
+
+def build_certificates_section(data: dict) -> tuple[str, list[str]]:
     categories = data.get("categories", {})
     translations = data.get("files", {})
 
-    # A fixed color palette (badge colors)
-    colors = [
-        "1f77b4",  # blue
-        "ff7f0e",  # orange
-        "2ca02c",  # green
-        "d62728",  # red
-        "9467bd",  # purple
-        "8c564b",  # brown
-        "e377c2",  # pink
-        "7f7f7f",  # gray
-        "17becf",  # cyan
-    ]
-
     missing: list[str] = []
-
     rows = []
-    cat_dirs = list_category_dirs()
 
-    for idx, d in enumerate(cat_dirs):
+    for idx, d in enumerate(list_certificate_dirs()):
         cat_key = d.name
-        cat_title = categories.get(cat_key, cat_key)  # chinese title preferred
+        cat_title = categories.get(cat_key, cat_key)
+        zh_name, en_name = split_bilingual(cat_title)
 
-        # Collect file names (non-recursive for now)
+        emoji = CAT_EMOJIS[idx % len(CAT_EMOJIS)]
+        if en_name:
+            cat_cell = f"{emoji} **{zh_name}**<br><sub>{en_name}</sub>"
+        else:
+            cat_cell = f"{emoji} **{zh_name}**"
+
         files = [p for p in sorted(d.iterdir()) if p.is_file()]
-        items_zh = []
+        items = []
         for fp in files:
             base = strip_ext(fp.name)
             zh = translations.get(base)
             if not zh:
                 missing.append(base)
                 zh = humanize_fallback(base)
-            items_zh.append(zh)
+            items.append(zh)
 
-        color = colors[idx % len(colors)]
-        # Use shields badge (stable on GitHub)
-        badge_label = "分類"
-        badge_msg = cat_title
-        # shields expects URL-escaped pieces; keep it simple by replacing spaces with %20
-        def esc(s: str) -> str:
-            return (
-                s.replace("-", "--")
-                 .replace("_", "__")
-                 .replace(" ", "%20")
-                 .replace("/", "%2F")
-                 .replace("（", "%EF%BC%88")
-                 .replace("）", "%EF%BC%89")
-            )
+        content = "<br>".join(f"• {item}" for item in items) if items else "（無）"
+        rows.append(f"| {cat_cell} | {content} |")
 
-        badge = f"![{cat_title}](https://img.shields.io/badge/{esc(badge_label)}-{esc(badge_msg)}-{color})"
-        content = "；".join(items_zh) if items_zh else "（無）"
-        rows.append(f"| {badge} | {content} |")
-
-    section = "\n".join(
-        [
-            "## 專業證照與訓練（重點一覽）",
-            "",
-            "| 分類 | 內容（重點） |",
-            "|---|---|",
-            *rows,
-            "",
-        ]
-    )
+    section = "\n".join([
+        "## 📋 專業證照與訓練（Professional Certifications & Training）",
+        "",
+        "| 分類 Category | 項目 Items |",
+        "|:---|:---|",
+        *rows,
+        "",
+    ])
     return section, missing
 
+
+def build_work_experience_section() -> str:
+    data_path = REPO_ROOT / "10_Work_Experience" / "work_experience.yml"
+    data = load_yaml(data_path)
+    if not data or not isinstance(data, list):
+        return ""
+
+    rows = []
+    for item in data:
+        period = item.get("period", "")
+        institution = item.get("institution", "")
+        role = item.get("role", "")
+        url = item.get("url", "")
+        note = item.get("note", "")
+
+        inst_text = f"[{institution}]({url})" if url else institution
+        note_text = f"<br><sub>{note}</sub>" if note else ""
+        rows.append(f"| **{period}** | {inst_text} | {role}{note_text} |")
+
+    return "\n".join([
+        "## 💼 工作經歷（Work Experience）",
+        "",
+        "| 期間 Period | 機構 Institution | 職稱 Role |",
+        "|:---|:---|:---|",
+        *rows,
+        "",
+    ])
+
+
+def build_publications_section() -> str:
+    data_path = REPO_ROOT / "publications" / "publications.yml"
+    data = load_yaml(data_path)
+    if not data or not isinstance(data, list):
+        return ""
+
+    lines = [
+        "## 📚 發表論文（Publications）",
+        "",
+    ]
+    for i, pub in enumerate(data, 1):
+        authors = pub.get("authors", "")
+        title = pub.get("title", "")
+        journal = pub.get("journal", "")
+        year = pub.get("year", "")
+        detail = pub.get("detail", "")
+        doi = pub.get("doi", "")
+        url = pub.get("url", "")
+        image = pub.get("image", "")
+        note = pub.get("note", "")
+
+        link = url if url else (f"https://doi.org/{doi}" if doi else "")
+        title_text = f"[{title}]({link})" if link else title
+
+        citation = f"{i}. {authors} {title_text} *{journal}*."
+        if detail:
+            citation += f" {detail}."
+        if note:
+            citation += f" {note}."
+
+        if image:
+            lines.append(f'<img src="{image}" width="100" align="right" style="margin-left:8px">')
+        lines.append(citation)
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+def build_projects_section() -> str:
+    data_path = REPO_ROOT / "projects" / "projects.yml"
+    data = load_yaml(data_path)
+    if not data or not isinstance(data, list):
+        return ""
+
+    lines = [
+        "## 🔬 研究與 AI 專案（Research & AI Projects）",
+        "",
+    ]
+    for proj in data:
+        title = proj.get("title", "")
+        description = proj.get("description", "")
+        url = proj.get("url", "")
+        image = proj.get("image", "")
+        tags = proj.get("tags", [])
+        status = proj.get("status", "")
+        note = proj.get("note", "")
+
+        title_text = f"**[{title}]({url})**" if url else f"**{title}**"
+        header_parts = [title_text]
+        if status:
+            header_parts.append(f"`{status}`")
+        lines.append("### " + " ".join(header_parts) if not url else title_text)
+
+        if status and url:
+            lines.append(f"`{status}`")
+
+        if image:
+            lines.append(f'<img src="{image}" width="200" align="right">')
+        if description:
+            desc = str(description).strip()
+            lines.append(desc)
+        if note:
+            lines.append(f"*{note}*")
+        if tags:
+            lines.append("**Tags:** " + " ".join(f"`{t}`" for t in tags))
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# README updater
+# ---------------------------------------------------------------------------
 
 def upsert_readme_section(readme_text: str, new_section: str) -> str:
     if START_MARK in readme_text and END_MARK in readme_text:
         before, rest = readme_text.split(START_MARK, 1)
-        middle, after = rest.split(END_MARK, 1)
+        _, after = rest.split(END_MARK, 1)
         return before + START_MARK + "\n\n" + new_section + "\n" + END_MARK + after
-
-    # If markers not found, append them at top
     insert = f"{START_MARK}\n\n{new_section}\n{END_MARK}\n\n"
     return insert + readme_text
 
 
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
 def main() -> None:
     data = load_dict()
-
-    # Ensure base structure exists
     data.setdefault("categories", {})
     data.setdefault("files", {})
 
-    # Auto-fill category titles if missing (you can edit later)
-    default_categories_zh = {
-        "01_Core_Licensure_and_Specialty": "核心執照與專科資格",
-        "02_Neuromodulation_TMS_VNS_tPBM": "神經調控",
-        "03_Neurovascular_Endovascular": "腦血管與介入",
-        "04_Ultrasound_Multisystem": "超音波（多系統）",
-        "05_Acute_Care_Emergency": "急性照護",
-        "06_Home_Care_LongTermCare_Community": "居家照護／長照／社區／慢性病防治",
-        "07_Regulatory": "法規與管制",
-        "08_Advanced_Therapies_Cell_Therapy": "進階治療",
-        "09_Education_and_Service": "學歷與服務",
+    default_categories = {
+        "01_Core_Licensure_and_Specialty": "核心執照與專科資格 / Core Licensure & Specialty",
+        "02_Neuromodulation_TMS_VNS_tPBM": "神經調控 / Neuromodulation / TMS / VNS / tPBM",
+        "03_Neurovascular_Endovascular": "腦血管與介入 / Neurovascular & Endovascular",
+        "04_Ultrasound_Multisystem": "超音波（多系統）/ Ultrasound (Multisystem)",
+        "05_Acute_Care_Emergency": "急性照護 / Acute Care & Emergency",
+        "06_Home_Care_LongTermCare_Community": "居家照護／長照／社區 / Home Care / LTC / Community",
+        "07_Regulatory": "法規與管制 / Regulatory",
+        "08_Advanced_Therapies_Cell_Therapy": "進階治療 / Advanced Therapies & Cell Therapy",
+        "09_Education_and_Service": "學歷與服務 / Education & Service",
     }
-    for k, v in default_categories_zh.items():
-        data["categories"].setdefault(k, v)
+    for k, v in default_categories.items():
+        data["categories"][k] = v  # always keep in sync with defaults
 
-    new_section, missing = build_markdown_section(data)
+    cert_section, missing = build_certificates_section(data)
+    work_section = build_work_experience_section()
+    pub_section = build_publications_section()
+    proj_section = build_projects_section()
+
+    parts = [cert_section]
+    if work_section:
+        parts.append(work_section)
+    if pub_section:
+        parts.append(pub_section)
+    if proj_section:
+        parts.append(proj_section)
+    full_section = "\n".join(parts)
 
     if not README_PATH.exists():
         README_PATH.write_text("# Dr. Chan Lin Chu - CV and licenses\n\n", encoding="utf-8")
 
     old = README_PATH.read_text(encoding="utf-8")
-    updated = upsert_readme_section(old, new_section)
+    updated = upsert_readme_section(old, full_section)
     README_PATH.write_text(updated, encoding="utf-8")
 
-    # Save dictionary (keeps categories normalized)
     save_dict(data)
 
-    # Print missing translations in CI logs
     if missing:
         unique_missing = sorted(set(missing))
         print("Missing translations (add to .github/translations.yml under files:):")
         for k in unique_missing:
             print(f" - {k}")
-        # Do not fail; just inform.
     else:
         print("All filenames translated.")
 
 
 if __name__ == "__main__":
     main()
+
