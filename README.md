@@ -29,7 +29,7 @@
 
 ## 📚 發表論文（Publications）
 
-1. Chu CL, Lee TH, Chen YP, Ro LS, Hsu JL, Chu YC, Chen CK, Pei YC. [Recovery of walking ability in stroke patients through postacute care rehabilitation.](https://doi.org/10.1016/j.bj.2022.07.003) *Biomed J*. 2022 Jul 21:S2319-4170(22)00104-4.
+1. Chu CL, Lee TH, Chen YP, Ro LS, Hsu JL, Chu YC, Chen CK, Pei YC. [Recovery of walking ability in stroke patients through postacute care rehabilitation.](https://doi.org/10.1016/j.bj.2022.07.004) *Biomed J*. 2022 Jul 21:S2319-4170(22)00104-4.
 
 2. Chu CL, Chen YP, Chen CCP, Chen CK, Chang HN, Chang CH, Pei YC. [Functional Recovery Patterns of Hemorrhagic and Ischemic Stroke Patients Under Post-Acute Care Rehabilitation Program.](https://doi.org/10.2147/NDT.S261525) *Neuropsychiatr Dis Treat*. 2020 Aug 13;16:1975–1985.
 
