@@ -1,4 +1,4 @@
-# 朱展霖醫師 Dr. Chan Lin Chu — 專業證照 & 學經歷
+# 朱展麟醫師 Dr. Chan Lin Chu — 專業證照 & 學經歷
 
 <div align="center">
 
