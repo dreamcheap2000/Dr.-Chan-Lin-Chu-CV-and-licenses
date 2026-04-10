@@ -77,6 +77,30 @@ def split_bilingual(title: str) -> tuple[str, str]:
     return title.strip(), ""
 
 
+def find_category_title(categories: dict, dir_name: str) -> str:
+    """Map a directory name to the bilingual title in translations.yml.
+
+    Prefers exact match first (fast, no false positives).  If the exact key is
+    not found, falls back to a suffix match by stripping the leading two-digit
+    numeric prefix (e.g. '02_') from both the directory name and each category
+    key.  This is a safeguard against regression if folder numbers and
+    translation-key numbers drift apart over time — it is not intended to
+    support intentional numbering mismatches.
+    """
+    # 1) Exact match (fast path, no false positives)
+    if dir_name in categories:
+        return categories[dir_name]
+
+    # 2) Suffix match: strip leading NN_ prefix and compare
+    suffix = re.sub(r"^\d{2}_", "", dir_name)
+    for k, v in categories.items():
+        if re.sub(r"^\d{2}_", "", k) == suffix:
+            return v
+
+    # 3) Fallback: return raw dir name (will render as-is)
+    return dir_name
+
+
 # ---------------------------------------------------------------------------
 # Section builders
 # ---------------------------------------------------------------------------
@@ -89,8 +113,7 @@ def build_certificates_section(data: dict) -> tuple[str, list[str]]:
     rows = []
 
     for idx, d in enumerate(list_certificate_dirs()):
-        cat_key = d.name
-        cat_title = categories.get(cat_key, cat_key)
+        cat_title = find_category_title(categories, d.name)
         zh_name, en_name = split_bilingual(cat_title)
 
         emoji = CAT_EMOJIS[idx % len(CAT_EMOJIS)]
@@ -255,9 +278,9 @@ def main() -> None:
 
     default_categories = {
         "01_Core_Licensure_and_Specialty": "核心執照與專科資格 / Core Licensure & Specialty",
-        "02_Neuromodulation_TMS_VNS_tPBM": "神經調控 / Neuromodulation / TMS / VNS / tPBM",
-        "03_Neurovascular_Endovascular": "腦血管與介入 / Neurovascular & Endovascular",
-        "04_Ultrasound_Multisystem": "超音波（多系統）/ Ultrasound (Multisystem)",
+        "02_Neurovascular_Endovascular": "腦血管與介入 / Neurovascular & Endovascular",
+        "03_Ultrasound_Multisystem": "超音波（多系統）/ Ultrasound (Multisystem)",
+        "04_Neuromodulation_TMS_VNS_tPBM": "神經調控 / Neuromodulation / TMS / VNS / tPBM",
         "05_Acute_Care_Emergency": "急性照護 / Acute Care & Emergency",
         "06_Home_Care_LongTermCare_Community": "居家照護／長照／社區 / Home Care / LTC / Community",
         "07_Regulatory": "法規與管制 / Regulatory",
