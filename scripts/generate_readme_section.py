@@ -78,24 +78,26 @@ def split_bilingual(title: str) -> tuple[str, str]:
 
 
 def find_category_title(categories: dict, dir_name: str) -> str:
-    """Map a folder name to its bilingual title from *categories*.
+    """Map a directory name to the bilingual title in translations.yml.
 
-    Folders and translation keys use the same ``NN_Suffix`` naming scheme, but
-    the numeric prefix occasionally differs between the actual folder and the
-    key stored in *translations.yml* (e.g. folder ``02_Neurovascular_Endovascular``
-    vs. key ``03_Neurovascular_Endovascular``).  This helper first tries an
-    exact match, then falls back to matching by the non-numeric suffix so that
-    categories 02/03/04 (and any future mismatches) are rendered with the
-    correct bilingual title instead of the raw folder name.
+    Prefers exact match first (fast, no false positives).  If the exact key is
+    not found, falls back to a suffix match by stripping the leading two-digit
+    numeric prefix (e.g. '02_') from both the directory name and each category
+    key.  This is a safeguard against regression if folder numbers and
+    translation-key numbers drift apart over time — it is not intended to
+    support intentional numbering mismatches.
     """
+    # 1) Exact match (fast path, no false positives)
     if dir_name in categories:
         return categories[dir_name]
 
-    suffix = re.sub(r"^\d+_", "", dir_name)
+    # 2) Suffix match: strip leading NN_ prefix and compare
+    suffix = re.sub(r"^\d{2}_", "", dir_name)
     for k, v in categories.items():
-        if re.sub(r"^\d+_", "", k) == suffix:
+        if re.sub(r"^\d{2}_", "", k) == suffix:
             return v
 
+    # 3) Fallback: return raw dir name (will render as-is)
     return dir_name
 
 
