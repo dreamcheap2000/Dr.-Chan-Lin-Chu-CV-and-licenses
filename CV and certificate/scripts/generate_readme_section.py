@@ -136,8 +136,7 @@ def build_certificates_section(data: dict) -> tuple[str, list[str]]:
         else:
             cat_cell = f"{emoji} **{zh_name}**"
 
-        jpg_exts = {".jpg", ".jpeg"}
-        files = [p for p in sorted(d.iterdir()) if p.is_file() and p.suffix.lower() in jpg_exts]
+        files = [p for p in sorted(d.iterdir()) if p.is_file()]
         file_items: list[tuple[str, str]] = []
         for fp in files:
             base = strip_numeric_prefix(strip_ext(fp.name))
