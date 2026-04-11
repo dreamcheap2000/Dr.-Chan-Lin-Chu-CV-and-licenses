@@ -152,7 +152,7 @@ def build_certificates_section(data: dict) -> tuple[str, list[str]]:
                 zh = humanize_fallback(base)
             file_items.append((zh, fp.name))
         # Sort shortest → longest by translated text; tie-break: text, then filename
-        file_items.sort(key=lambda t: (len(t[0]), t[0], t[1]))
+        file_items.sort(key=lambda zh_fname: (len(zh_fname[0]), zh_fname[0], zh_fname[1]))
         items = [t[0] for t in file_items]
 
         content = "<br>".join(f"• {item}" for item in items) if items else "（無）"
