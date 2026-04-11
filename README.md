@@ -29,17 +29,17 @@
 
 ## 📚 發表論文（Publications）
 
-1. Chu CL, Lee TH, Chen YP, Ro LS, Hsu JL, Chu YC, Chen CK, Pei YC. [Recovery of walking ability in stroke patients through postacute care rehabilitation.](https://doi.org/10.1016/j.bj.2022.07.004) *Biomed J*. 2022 Jul 21:S2319-4170(22)00104-4.
+1. Chu CL, Lee TH, Chen YP, Ro LS, Hsu JL, Chu YC, Chen CK, Pei YC. [Recovery of walking ability in stroke patients through postacute care rehabilitation.](https://pubmed.ncbi.nlm.nih.gov/35872227/) *Biomed J*. 2022 Jul 21:S2319-4170(22)00104-4. PMID: 35872227.
 
 2. Chu CL, Chen YP, Chen CCP, Chen CK, Chang HN, Chang CH, Pei YC. [Functional Recovery Patterns of Hemorrhagic and Ischemic Stroke Patients Under Post-Acute Care Rehabilitation Program.](https://doi.org/10.2147/NDT.S261525) *Neuropsychiatr Dis Treat*. 2020 Aug 13;16:1975–1985.
 
 3. Chu CL, Lu YJ, Lee TH, Jung SM, Chu YC, Wong HF. [Concomitant spinal dural arteriovenous fistula and nodular fasciitis in an adolescent: case report.](https://doi.org/10.1186/s12887-021-03090-6) *BMC Pediatr*. 2022 Jan 8;22(1):30.
 
-4. Chu CL, Chu YC, Lam CT, Lee TH, Chien SC, Yeh CH, Wu YM, Wong HF. [Endovascular Treatment of Medial Tentorial Dural Arteriovenous Fistula Through the Dural Branch of the Pial Artery.](https://doi.org/10.3389/fneur.2021.736919) *Front Neurol*. 2021 Dec 13;12:736919.
+4. Chu CL, Chu YC, Lam CT, Lee TH, Chien SC, Yeh CH, Wu YM, Wong HF. [Endovascular Treatment of Medial Tentorial Dural Arteriovenous Fistula Through the Dural Branch of the Pial Artery.](https://pubmed.ncbi.nlm.nih.gov/34966343/) *Front Neurol*. 2021 Dec 13;12:736919. PMID: 34966343.
 
-5. Chang SC, Chu CL, Chen CK, Chang HN, Wong AMK, Chen YP, Pei YC. [The Comparison and Interpretation of Machine-Learning Models in Post-Stroke Functional Outcome Prediction.](https://doi.org/10.3390/diagnostics11101784) *Diagnostics (Basel)*. 2021 Sep 28;11(10):1784.
+5. Chang SC, Chu CL, Chen CK, Chang HN, Wong AMK, Chen YP, Pei YC. [The Comparison and Interpretation of Machine-Learning Models in Post-Stroke Functional Outcome Prediction.](https://pubmed.ncbi.nlm.nih.gov/34679482/) *Diagnostics (Basel)*. 2021 Sep 28;11(10):1784. PMID: 34679482.
 
-6. Yeo LL, Chen VHE, Leow AS, Meyer L, Fiehler J, Tu TM, Tham CH, Sia CH, Jamous A, Behme D, Kastrup A, Papanagiotou P, Styczen H, Forsting M, Lee TH, Chu CL, Fischer S, Maus V, Abdullayev N, Kabbasch C, Mönch S, Maegerlein C, Arnberg F, Andersson T, Holmin S, Teoh HL, Paliwal P, Ahmad A, Gopinathan A, Yang C, Seet RC, Chan BP, Sharma VK, Tan BY. [Outcomes in young adults with acute ischemic stroke undergoing endovascular thrombectomy: A real-world multicenter experience.](https://doi.org/10.1111/ene.14899) *Eur J Neurol*. 2021 Aug;28(8):2736–2744. PMID: 33960072.
+6. Yeo LL, Chen VHE, Leow AS, Meyer L, Fiehler J, Tu TM, Tham CH, Sia CH, Jamous A, Behme D, Kastrup A, Papanagiotou P, Styczen H, Forsting M, Lee TH, Chu CL, Fischer S, Maus V, Abdullayev N, Kabbasch C, Mönch S, Maegerlein C, Arnberg F, Andersson T, Holmin S, Teoh HL, Paliwal P, Ahmad A, Gopinathan A, Yang C, Seet RC, Chan BP, Sharma VK, Tan BY. [Outcomes in young adults with acute ischemic stroke undergoing endovascular thrombectomy: A real-world multicenter experience.](https://pubmed.ncbi.nlm.nih.gov/33960072/) *Eur J Neurol*. 2021 Aug;28(8):2736–2744. PMID: 33960072.
 
 ## 🔬 研究與 AI 專案（Research & AI Projects）
 

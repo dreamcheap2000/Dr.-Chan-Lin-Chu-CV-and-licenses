@@ -1,55 +1,53 @@
-# Publications — 發表論文
-# Edit this file to add or update publications.
-# Supported fields:
-#   authors  — full author string
-#   title    — paper title
-#   journal  — journal / conference name
-#   year     — publication year
-#   detail   — volume/issue/pages/date string (optional)
-#   doi      — DOI without "https://doi.org/" prefix (optional)
-#   url      — direct link (overrides doi link) (optional)
-#   image    — URL or repo-relative path to a figure/cover image (optional)
-#   note     — extra note, e.g. "PMID: 12345678" (optional)
-
-- authors: "Chu CL, Lee TH, Chen YP, Ro LS, Hsu JL, Chu YC, Chen CK, Pei YC."
-  title: "Recovery of walking ability in stroke patients through postacute care rehabilitation."
-  journal: "Biomed J"
+- authors: Chu CL, Lee TH, Chen YP, Ro LS, Hsu JL, Chu YC, Chen CK, Pei YC.
+  title: Recovery of walking ability in stroke patients through postacute care rehabilitation.
+  journal: Biomed J
   year: 2022
-  detail: "2022 Jul 21:S2319-4170(22)00104-4"
-  doi: "10.1016/j.bj.2022.07.004"
-
-- authors: "Chu CL, Chen YP, Chen CCP, Chen CK, Chang HN, Chang CH, Pei YC."
-  title: "Functional Recovery Patterns of Hemorrhagic and Ischemic Stroke Patients Under Post-Acute Care Rehabilitation Program."
-  journal: "Neuropsychiatr Dis Treat"
+  detail: 2022 Jul 21:S2319-4170(22)00104-4
+  doi: 10.1016/j.bj.2022.07.004
+  url: https://pubmed.ncbi.nlm.nih.gov/35872227/
+  note: 'PMID: 35872227'
+- authors: Chu CL, Chen YP, Chen CCP, Chen CK, Chang HN, Chang CH, Pei YC.
+  title: Functional Recovery Patterns of Hemorrhagic and Ischemic Stroke Patients
+    Under Post-Acute Care Rehabilitation Program.
+  journal: Neuropsychiatr Dis Treat
   year: 2020
-  detail: "2020 Aug 13;16:1975–1985"
-  doi: "10.2147/NDT.S261525"
-
-- authors: "Chu CL, Lu YJ, Lee TH, Jung SM, Chu YC, Wong HF."
-  title: "Concomitant spinal dural arteriovenous fistula and nodular fasciitis in an adolescent: case report."
-  journal: "BMC Pediatr"
+  detail: 2020 Aug 13;16:1975–1985
+  doi: 10.2147/NDT.S261525
+- authors: Chu CL, Lu YJ, Lee TH, Jung SM, Chu YC, Wong HF.
+  title: 'Concomitant spinal dural arteriovenous fistula and nodular fasciitis in
+    an adolescent: case report.'
+  journal: BMC Pediatr
   year: 2022
-  detail: "2022 Jan 8;22(1):30"
-  doi: "10.1186/s12887-021-03090-6"
-
-- authors: "Chu CL, Chu YC, Lam CT, Lee TH, Chien SC, Yeh CH, Wu YM, Wong HF."
-  title: "Endovascular Treatment of Medial Tentorial Dural Arteriovenous Fistula Through the Dural Branch of the Pial Artery."
-  journal: "Front Neurol"
+  detail: 2022 Jan 8;22(1):30
+  doi: 10.1186/s12887-021-03090-6
+- authors: Chu CL, Chu YC, Lam CT, Lee TH, Chien SC, Yeh CH, Wu YM, Wong HF.
+  title: Endovascular Treatment of Medial Tentorial Dural Arteriovenous Fistula Through
+    the Dural Branch of the Pial Artery.
+  journal: Front Neurol
   year: 2021
-  detail: "2021 Dec 13;12:736919"
-  doi: "10.3389/fneur.2021.736919"
-
-- authors: "Chang SC, Chu CL, Chen CK, Chang HN, Wong AMK, Chen YP, Pei YC."
-  title: "The Comparison and Interpretation of Machine-Learning Models in Post-Stroke Functional Outcome Prediction."
-  journal: "Diagnostics (Basel)"
+  detail: 2021 Dec 13;12:736919
+  doi: 10.3389/fneur.2021.736919
+  url: https://pubmed.ncbi.nlm.nih.gov/34966343/
+  note: 'PMID: 34966343'
+- authors: Chang SC, Chu CL, Chen CK, Chang HN, Wong AMK, Chen YP, Pei YC.
+  title: The Comparison and Interpretation of Machine-Learning Models in Post-Stroke
+    Functional Outcome Prediction.
+  journal: Diagnostics (Basel)
   year: 2021
-  detail: "2021 Sep 28;11(10):1784"
-  doi: "10.3390/diagnostics11101784"
-
-- authors: "Yeo LL, Chen VHE, Leow AS, Meyer L, Fiehler J, Tu TM, Tham CH, Sia CH, Jamous A, Behme D, Kastrup A, Papanagiotou P, Styczen H, Forsting M, Lee TH, Chu CL, Fischer S, Maus V, Abdullayev N, Kabbasch C, Mönch S, Maegerlein C, Arnberg F, Andersson T, Holmin S, Teoh HL, Paliwal P, Ahmad A, Gopinathan A, Yang C, Seet RC, Chan BP, Sharma VK, Tan BY."
-  title: "Outcomes in young adults with acute ischemic stroke undergoing endovascular thrombectomy: A real-world multicenter experience."
-  journal: "Eur J Neurol"
+  detail: 2021 Sep 28;11(10):1784
+  doi: 10.3390/diagnostics11101784
+  url: https://pubmed.ncbi.nlm.nih.gov/34679482/
+  note: 'PMID: 34679482'
+- authors: Yeo LL, Chen VHE, Leow AS, Meyer L, Fiehler J, Tu TM, Tham CH, Sia CH,
+    Jamous A, Behme D, Kastrup A, Papanagiotou P, Styczen H, Forsting M, Lee TH, Chu
+    CL, Fischer S, Maus V, Abdullayev N, Kabbasch C, Mönch S, Maegerlein C, Arnberg
+    F, Andersson T, Holmin S, Teoh HL, Paliwal P, Ahmad A, Gopinathan A, Yang C, Seet
+    RC, Chan BP, Sharma VK, Tan BY.
+  title: 'Outcomes in young adults with acute ischemic stroke undergoing endovascular
+    thrombectomy: A real-world multicenter experience.'
+  journal: Eur J Neurol
   year: 2021
-  detail: "2021 Aug;28(8):2736–2744"
-  doi: "10.1111/ene.14899"
-  note: "PMID: 33960072"
+  detail: 2021 Aug;28(8):2736–2744
+  doi: 10.1111/ene.14899
+  note: 'PMID: 33960072'
+  url: https://pubmed.ncbi.nlm.nih.gov/33960072/
