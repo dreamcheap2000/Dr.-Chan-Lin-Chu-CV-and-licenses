@@ -58,10 +58,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add README.md .github/translations.yml \
-            "CV and certificate/publications/publications.yml" \
-            "CV and certificate/projects/phd_colab_notebook.ipynb" \
-            "CV and certificate/projects/mathematical_framework.html" \
-            || true
+            "CV and certificate/publications/publications.yml"
+          # Add project files only if they were successfully downloaded
+          for f in "CV and certificate/projects/phd_colab_notebook.ipynb" \
+                   "CV and certificate/projects/mathematical_framework.html"; do
+            [ -f "$f" ] && git add "$f"
+          done
           if git diff --staged --quiet; then
             echo "No changes to commit."
             exit 0
