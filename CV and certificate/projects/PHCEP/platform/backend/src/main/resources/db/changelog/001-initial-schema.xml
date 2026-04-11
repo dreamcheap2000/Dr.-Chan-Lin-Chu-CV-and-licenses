@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- ── Patient Records ──────────────────────────────────────────────── -->
+    <changeSet id="001-01" author="phcep">
+        <createTable tableName="patient_records">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="pseudonymous_token" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="year_of_birth" type="INTEGER"/>
+            <column name="sex" type="VARCHAR(10)"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+        <createIndex tableName="patient_records" indexName="idx_patient_token">
+            <column name="pseudonymous_token"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- ── Health Observations ──────────────────────────────────────────── -->
+    <changeSet id="001-02" author="phcep">
+        <createTable tableName="health_observations">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="pseudonymous_token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="observation_type" type="VARCHAR(50)"/>
+            <column name="loinc_code" type="VARCHAR(20)"/>
+            <column name="observation_text" type="TEXT"/>
+            <column name="numeric_value" type="NUMERIC(15,4)"/>
+            <column name="unit" type="VARCHAR(50)"/>
+            <column name="effective_date_time" type="TIMESTAMP"/>
+            <column name="semantic_embedding_json" type="TEXT"/>
+            <column name="global_embedding_json" type="TEXT"/>
+            <column name="fragment_embedding_json" type="TEXT"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="health_observations" indexName="idx_obs_token">
+            <column name="pseudonymous_token"/>
+        </createIndex>
+        <createIndex tableName="health_observations" indexName="idx_obs_datetime">
+            <column name="effective_date_time"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- ── EBM Entries ───────────────────────────────────────────────────── -->
+    <changeSet id="001-03" author="phcep">
+        <createTable tableName="ebm_entries">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="statement" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="pmid" type="VARCHAR(20)"/>
+            <column name="article_url" type="VARCHAR(1000)"/>
+            <column name="icd10_codes" type="VARCHAR(50)"/>
+            <column name="specialty" type="VARCHAR(100)"/>
+            <column name="semantic_embedding_json" type="TEXT"/>
+            <column name="global_embedding_json" type="TEXT"/>
+            <column name="fragment_embedding_json" type="TEXT"/>
+            <column name="entered_by_hcp" type="VARCHAR(255)"/>
+            <column name="publication_date" type="DATE"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- ── Medical Queries ───────────────────────────────────────────────── -->
+    <changeSet id="001-04" author="phcep">
+        <createTable tableName="medical_queries">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="pseudonymous_token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="query_text" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="icd10_code" type="VARCHAR(20)"/>
+            <column name="status" type="VARCHAR(30)" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ai_answer" type="TEXT"/>
+            <column name="top_k_matches_json" type="TEXT"/>
+            <column name="confidence" type="DOUBLE PRECISION"/>
+            <column name="hcp_answer" type="TEXT"/>
+            <column name="citations" type="TEXT"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="answered_at" type="TIMESTAMP"/>
+        </createTable>
+        <createIndex tableName="medical_queries" indexName="idx_query_token">
+            <column name="pseudonymous_token"/>
+        </createIndex>
+        <createIndex tableName="medical_queries" indexName="idx_query_status">
+            <column name="status"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

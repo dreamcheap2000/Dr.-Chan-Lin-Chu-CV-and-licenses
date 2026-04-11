@@ -22,6 +22,15 @@ public class EbmController {
 
     private final EbmService ebmService;
 
+    /** List all EBM entries (used by ML service for candidate retrieval). */
+    @GetMapping
+    public ResponseEntity<List<EbmEntry>> list(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "200") int size) {
+        var pageable = org.springframework.data.domain.PageRequest.of(page, Math.min(size, 500));
+        return ResponseEntity.ok(ebmService.listAll(pageable));
+    }
+
     /** Add a new EBM entry (HCP or Admin). */
     @PostMapping
     @PreAuthorize("hasAnyRole('HCP','ADMIN')")
