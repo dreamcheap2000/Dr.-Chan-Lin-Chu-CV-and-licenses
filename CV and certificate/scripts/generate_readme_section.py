@@ -168,14 +168,14 @@ def build_certificates_section(data: dict) -> tuple[str, list[str]]:
     return section, missing
 
 
-def build_work_experience_section() -> str:
-    data_path = CV_FOLDER / "10_Work_Experience" / "work_experience.yml"
-    data = load_yaml(data_path)
-    if not data or not isinstance(data, list):
-        return ""
+def _is_current(period: str) -> bool:
+    """Return True if the period string has no end date (ends with a dash)."""
+    return period.rstrip().endswith("–") or period.rstrip().endswith("-")
 
+
+def _build_work_rows(items: list[dict]) -> list[str]:
     rows = []
-    for item in data:
+    for item in items:
         period = item.get("period", "")
         institution = item.get("institution", "")
         role = item.get("role", "")
@@ -185,15 +185,44 @@ def build_work_experience_section() -> str:
         inst_text = f"[{institution}]({url})" if url else institution
         note_text = f"<br><sub>{note}</sub>" if note else ""
         rows.append(f"| **{period}** | {inst_text} | {role}{note_text} |")
+    return rows
 
-    return "\n".join([
+
+def build_work_experience_section() -> str:
+    data_path = CV_FOLDER / "10_Work_Experience" / "work_experience.yml"
+    data = load_yaml(data_path)
+    if not data or not isinstance(data, list):
+        return ""
+
+    current = [item for item in data if _is_current(item.get("period", ""))]
+    past = [item for item in data if not _is_current(item.get("period", ""))]
+
+    table_header = ["| 期間 Period | 機構 Institution | 職稱 Role |", "|:---|:---|:---|"]
+
+    lines = [
         "## 💼 工作經歷（Work Experience）",
         "",
-        "| 期間 Period | 機構 Institution | 職稱 Role |",
-        "|:---|:---|:---|",
-        *rows,
-        "",
-    ])
+    ]
+
+    if current:
+        lines += [
+            "### 現職 (Current Positions)",
+            "",
+            *table_header,
+            *_build_work_rows(current),
+            "",
+        ]
+
+    if past:
+        lines += [
+            "### 過往經歷 (Past Experience)",
+            "",
+            *table_header,
+            *_build_work_rows(past),
+            "",
+        ]
+
+    return "\n".join(lines)
 
 
 def build_publications_section() -> str:
