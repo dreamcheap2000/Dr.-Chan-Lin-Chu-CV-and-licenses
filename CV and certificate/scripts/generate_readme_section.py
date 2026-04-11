@@ -34,6 +34,11 @@ def strip_ext(filename: str) -> str:
     return p.stem
 
 
+def strip_numeric_prefix(stem: str) -> str:
+    """Remove a leading NN_ numeric sort prefix (e.g. '01_') from a stem."""
+    return re.sub(r"^\d{2}_", "", stem)
+
+
 def humanize_fallback(key: str) -> str:
     s = key.replace("_", " ").strip()
     s = re.sub(r"\s+", " ", s)
@@ -54,8 +59,15 @@ def load_dict() -> dict:
 
 def save_dict(data: dict) -> None:
     DICT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    # Always write pending first so untranslated keys appear at the top of the file
+    ordered: dict = {}
+    if "pending" in data:
+        ordered["pending"] = data["pending"]
+    for k, v in data.items():
+        if k != "pending":
+            ordered[k] = v
     with DICT_PATH.open("w", encoding="utf-8") as f:
-        yaml.safe_dump(data, f, allow_unicode=True, sort_keys=False)
+        yaml.safe_dump(ordered, f, allow_unicode=True, sort_keys=False)
 
 
 def list_certificate_dirs() -> list[Path]:
@@ -109,6 +121,7 @@ def find_category_title(categories: dict, dir_name: str) -> str:
 def build_certificates_section(data: dict) -> tuple[str, list[str]]:
     categories = data.get("categories", {})
     translations = data.get("files", {})
+    pending = data.setdefault("pending", {})
 
     missing: list[str] = []
     rows = []
@@ -126,10 +139,15 @@ def build_certificates_section(data: dict) -> tuple[str, list[str]]:
         files = [p for p in sorted(d.iterdir()) if p.is_file()]
         items = []
         for fp in files:
-            base = strip_ext(fp.name)
+            base = strip_numeric_prefix(strip_ext(fp.name))
+            # Promote from pending to files if the user has filled in a translation
+            if base in pending and pending[base]:
+                translations[base] = pending.pop(base)
             zh = translations.get(base)
             if not zh:
                 missing.append(base)
+                if base not in pending:
+                    pending[base] = None
                 zh = humanize_fallback(base)
             items.append(zh)
 
@@ -274,16 +292,17 @@ def upsert_readme_section(readme_text: str, new_section: str) -> str:
 
 def main() -> None:
     data = load_dict()
+    data.setdefault("pending", {})
     data.setdefault("categories", {})
     data.setdefault("files", {})
 
     default_categories = {
         "01_Core_Licensure_and_Specialty": "核心執照與專科資格 / Core Licensure & Specialty",
-        "02_Neuromodulation_TMS_VNS_tPBM": "神經調控 / Neuromodulation / TMS / VNS / tPBM",
-        "03_Neurovascular_Endovascular": "腦血管與介入 / Neurovascular & Endovascular",
-        "04_Ultrasound_Multisystem": "超音波（多系統）/ Ultrasound (Multisystem)",
-        "05_Acute_Care_Emergency": "急性照護 / Acute Care & Emergency",
-        "06_Home_Care_LongTermCare_Community": "居家照護／長照／社區 / Home Care / LTC / Community",
+        "02_Neurovascular_Endovascular": "腦血管與介入 / Neurovascular & Endovascular",
+        "03_Ultrasound_Multisystem": "超音波（多系統）/ Ultrasound (Multisystem)",
+        "04_Home_Care_LongTermCare_Community": "居家照護／長照／社區 / Home Care / LTC / Community",
+        "05_Neuromodulation_TMS_VNS_tPBM": "神經調控 / Neuromodulation / TMS / VNS / tPBM",
+        "06_Acute_Care_Emergency": "急性照護 / Acute Care & Emergency",
         "07_Regulatory": "法規與管制 / Regulatory",
         "08_Advanced_Therapies_Cell_Therapy": "進階治療 / Advanced Therapies & Cell Therapy",
         "09_Education_and_Service": "學歷與服務 / Education & Service",
