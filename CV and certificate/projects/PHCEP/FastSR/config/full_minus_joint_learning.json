@@ -1,0 +1,36 @@
+
+{
+    "name": "Full_minus_JL_EBM",
+    "ablation": true,
+    "run_config": {
+        "data_folders": ["data/EBM/train/200/0"],
+        "result_folders": ["output/prediction/200/0"],
+        "model_folders": ["output/trained_model/200/0"],
+        "test_data_folder": "data/EBM/test",
+        "test_text_file": "data/EBM/test/test_sentence_expert.csv"
+    },
+    "model_config":  {
+        "labels": ["participants", "interventions","outcomes"],
+        "num_filters": 20, 
+        "kernel_sizes": [1,3,5,7,9],
+        "sentence_mask": true,
+        "distance":"l2", 
+        "learning_rate":3e-5,
+        "patience":8, 
+        "tag_cost_weight": 0.5, 
+        "tagging": true,
+        "att_projection_layer": "lstm", 
+        "att_hidden_dim": 100,
+        "att_dropout_rate": 0.3,
+        "text_projection_layer": "linear", 
+        "text_hidden_dim": 100,
+        "initial_weights": [2.0,1.0,1.0],
+        "use_context": false,
+        "use_fragment": true,
+        "enable_frag_att": true,
+        "enable_joint_learning": false,
+        "tagging_method": "fastsr",
+        "syn_cost": false
+    }
+}
+

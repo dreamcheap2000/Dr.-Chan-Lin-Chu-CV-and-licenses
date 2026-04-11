@@ -1,0 +1,6 @@
+Column,Description,Example
+text,Sentence,Further multivariate analysis revealed sputum production from infected areas and increased LDH/glucose levels as independent risk factors for the disease.
+section,Section where the text exists,['81']
+Risk Factor,Label indiator,1
+Risk Factor Fragment,"Fragment text if this label exists; Multiple fragments are concatenated by "";""",increased LDH/glucose levels; sputum production from infected areas
+Risk Factor_fragment_index,An array containing the index of the first character of each fragment ,"[81, 39]"

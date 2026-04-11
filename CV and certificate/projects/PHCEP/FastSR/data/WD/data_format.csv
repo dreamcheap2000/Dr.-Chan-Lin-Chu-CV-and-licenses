@@ -1,0 +1,21 @@
+Column,Description,Example
+text,Sentence,Medical records of children with WD treated on an outpatient basis by one liver specialist (Professor Wang JS) in Children's Hospital of Fudan University from January 2006 to March 2013 were retrospectively analyzed.
+section,Section where the text exists,"Clinical Setting, Patients and Methods Inclusion/Exclusion Criteria Children's Hospital of Fudan University is one of the major pediatric tertiary health care centers in China, and mainly receives referrals from the eastern region of the country. Recently, more and more patients all across China are coming to the Liver Center for diagnosis and treatment. Medical records of children with WD treated on an outpatient basis by one liver specialist (Professor Wang JS) in Children's Hospital of Fudan University from January 2006 to March 2013 were retrospectively analyzed. The Institutional Review Board in Children's Hospital of Fudan University approved this study and waived the need for parental informed consent for children's clinical data to be used for retrospective analysis. WD Scores were calculated for each child (aged less than 18 years at the time of first visit) using serum ceruloplasmin levels, urinary copper levels, presence/absence of Kayser-Fleischer (K-F) ring, and mutation analysis of ATP7B gene [4]. WD Scores of 4 or above were considered diagnostic of WD. ATP7B gene mutation analysis was done at the time of diagnosis by Sanger sequencing of DNA extracted from peripheral white blood cells. Patients were regarded as pre-symptomatic if diagnosed after accidental findings of abnormal liver enzymes, or by family screening after an index patient was confirmed. Children included in this analysis were newly diagnosed, and had baseline data plus at least one follow-up data point. Neurologic manifestations and other causes of liver, muscular, and metabolic diseases were excluded with appropriate investigations. Patients with insufficient data, neurologic/psychiatric symptoms, liver failure, and those who received chelation or combination therapy prior to zinc mono-therapy were excluded from this study."
+Study Period,Label indiator,1
+Study Period Fragment,"Fragment text if this label exists; Multiple fragments are concatenated by "";""",from January 2006 to March 2013
+Study Period_fragment_index,An array containing the index of the first character of each fragment ,['154']
+Study Design,Label indiator,1
+Study Design Fragment,"Fragment text if this label exists; Multiple fragments are concatenated by "";""",children with WD treated on an outpatient basis; retrospectively analyzed.
+Study_Design_fragment_index,An array containing the index of the first character of each fragment ,"['19', '190']"
+Sample Size,Label indiator,0
+Sample Size Fragment,"Fragment text if this label exists; Multiple fragments are concatenated by "";""",
+Sample Size_fragment_index,An array containing the index of the first character of each fragment ,
+Country,Label indiator,0
+Country Fragment,"Fragment text if this label exists; Multiple fragments are concatenated by "";""",
+Country_fragment_index,An array containing the index of the first character of each fragment ,
+Population,Label indiator,1
+Population Fragment,"Fragment text if this label exists; Multiple fragments are concatenated by "";""",children with WD
+Population_fragment_index,An array containing the index of the first character of each fragment ,['19']
+Intervention,Label indiator,0
+Intervention Fragment,"Fragment text if this label exists; Multiple fragments are concatenated by "";""",
+Intervention_fragment_index,An array containing the index of the first character of each fragment ,
