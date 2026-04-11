@@ -19,7 +19,8 @@
 9. [Integration Points](#integration-points)
 10. [Roadmap](#roadmap)
 11. [Getting Started](#getting-started)
-12. [Folder Structure](#folder-structure)
+12. [Local macOS Deployment (M2)](#local-macos-deployment-m2)
+13. [Folder Structure](#folder-structure)
 
 ---
 
@@ -117,6 +118,7 @@ With time, the platform broadens its clinical coverage to align with Taiwan MOHW
 - `tw-core-ig-compliance.md` — FHIR mapping table to TW Core IG profiles
 - `data-flow.md` — end-to-end data lifecycle
 - `deployment.md` — Docker Compose, Kubernetes, cloud options
+- `deployment-local-macos.md` — step-by-step guide for running PHCEP on macOS Apple Silicon (M2)
 
 ### 5. `docker/` — Container Configuration
 - `docker-compose.yml` — full local stack
@@ -268,6 +270,22 @@ uvicorn api:app --reload --port 8081
 
 ---
 
+## Local macOS Deployment (M2)
+
+Running PHCEP on a **MacBook Air/Pro with Apple Silicon (M2)** is the recommended zero-cost path for development and demos.  
+A dedicated step-by-step guide covers both Docker Compose and non-Docker local dev, including:
+
+- Docker Desktop settings for Apple Silicon (arm64 vs amd64 images, memory allocation)
+- How to build and start the full stack with `docker compose up --build`
+- Non-Docker path: backend (Java/Maven), ML service (Python venv + PyTorch on arm64), and frontend (Node/Vite)
+- Required prerequisites and `.env` secrets setup (also handled by `scripts/setup.sh`)
+- Where to access the UI, REST API, and health endpoints
+- Common troubleshooting tips (port conflicts, PyTorch wheel issues, LINE webhook, etc.)
+
+👉 **[docs/deployment-local-macos.md](docs/deployment-local-macos.md)**
+
+---
+
 ## Folder Structure
 
 ```
@@ -298,7 +316,8 @@ PHCEP/
 │   ├── api-reference.md
 │   ├── tw-core-ig-compliance.md
 │   ├── data-flow.md
-│   └── deployment.md
+│   ├── deployment.md
+│   └── deployment-local-macos.md
 ├── docker/
 │   ├── docker-compose.yml
 │   ├── Dockerfile.backend
