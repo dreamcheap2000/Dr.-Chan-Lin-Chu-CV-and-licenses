@@ -6,11 +6,13 @@ import {
   FileTextOutlined,
   LineChartOutlined,
   BookOutlined,
+  AuditOutlined,
 } from '@ant-design/icons';
 import QueryPage from './pages/QueryPage';
 import ObservationsPage from './pages/ObservationsPage';
 import TimelinePage from './pages/TimelinePage';
 import EbmPage from './pages/EbmPage';
+import AdminPage from './pages/AdminPage';
 
 const { Header, Sider, Content } = Layout;
 
@@ -19,6 +21,7 @@ const menuItems = [
   { key: 'observations', icon: <FileTextOutlined />, label: <Link to="/observations">Health Records</Link> },
   { key: 'timeline', icon: <LineChartOutlined />, label: <Link to="/timeline">Timeline</Link> },
   { key: 'ebm', icon: <BookOutlined />, label: <Link to="/ebm">EBM Knowledge Base</Link> },
+  { key: 'admin', icon: <AuditOutlined />, label: <Link to="/admin">Platform Manager</Link> },
 ];
 
 const App: React.FC = () => (
@@ -39,6 +42,7 @@ const App: React.FC = () => (
           <Route path="/observations" element={<ObservationsPage />} />
           <Route path="/timeline" element={<TimelinePage />} />
           <Route path="/ebm" element={<EbmPage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </Content>
     </Layout>

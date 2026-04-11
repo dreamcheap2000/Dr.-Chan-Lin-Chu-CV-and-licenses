@@ -4,9 +4,11 @@ PHCEP Query Engine — retrieves and synthesises answers from:
   2. The EBM knowledge base (generalised evidence)
 
 Uses cosine similarity between FastSR embeddings to rank candidates,
-then constructs a synthesised answer string.
+then constructs a synthesised answer string and exposes per-match scores
+so that the frontend can render dynamic top-K result cards.
 """
 
+import json
 import logging
 import os
 from typing import Dict, List, Optional
@@ -53,16 +55,15 @@ class QueryEngine:
         """
         Main retrieval + synthesis pipeline:
           1. Encode the query
-          2. Retrieve candidate observations + EBM entries
+          2. Retrieve candidate observations + EBM entries from both sources
           3. Rank by cosine similarity (semantic channel)
           4. Synthesise answer from top-k
-          5. Return answer string + citations + confidence score
+          5. Return answer string + citations + confidence score +
+             individual ranked matches + escalation flag
         """
         query_emb = self.encoder.encode(query_text)
         query_vec = query_emb["semantic"]
 
-        # In a full deployment, candidates come from the vector store.
-        # For the scaffold, we return a structured placeholder.
         candidates = self._retrieve_candidates(pseudonymous_token, query_vec, top_k)
 
         if not candidates:
@@ -73,11 +74,15 @@ class QueryEngine:
                 ),
                 "citations": "",
                 "confidence": 0.0,
+                "matches": [],
+                "escalated": True,
             }
 
         top = candidates[0]
         confidence = top["score"]
-        answer_parts = [f"Based on your health records and evidence-based sources:"]
+        escalated = confidence < self.CONFIDENCE_THRESHOLD
+
+        answer_parts = ["Based on your health records and evidence-based sources:"]
         citations = []
 
         for c in candidates[:top_k]:
@@ -85,10 +90,25 @@ class QueryEngine:
             if c.get("citation"):
                 citations.append(c["citation"])
 
+        # Build structured match list for frontend display
+        matches = [
+            {
+                "rank": idx + 1,
+                "text": c["text"],
+                "confidence": round(c["score"], 4),
+                "citation": c.get("citation", ""),
+                "source": c.get("source", "observation"),
+                "url": c.get("url", ""),
+            }
+            for idx, c in enumerate(candidates[:top_k])
+        ]
+
         return {
             "answer": "\n".join(answer_parts),
             "citations": "; ".join(citations),
             "confidence": confidence,
+            "matches": matches,
+            "escalated": escalated,
         }
 
     def _retrieve_candidates(
@@ -98,36 +118,67 @@ class QueryEngine:
         top_k: int,
     ) -> List[Dict]:
         """
-        Retrieve and rank candidate records.
-        Phase 1: HTTP call to Spring Boot backend.
+        Retrieve and rank candidate records from patient observations and the
+        EBM knowledge base.
+        Phase 1: HTTP calls to Spring Boot backend.
         Phase 2: Direct pgvector / Qdrant query.
         """
         try:
             import httpx
+        except ImportError:
+            logger.warning("httpx not available; returning empty candidates")
+            return []
+
+        scored: List[Dict] = []
+
+        # --- Patient observations ---
+        try:
             resp = httpx.get(
                 f"{self.backend_url}/api/patient/observations",
                 params={"pseudonymous_token": pseudonymous_token},
                 timeout=10,
             )
-            if resp.status_code != 200:
-                return []
-            records = resp.json()
-            scored = []
-            for rec in records:
-                emb_json = rec.get("semanticEmbeddingJson")
-                if emb_json:
-                    import json
-                    vec = json.loads(emb_json)
-                    score = cosine_similarity(query_vec, vec)
-                else:
-                    score = 0.0
-                scored.append({
-                    "text": rec.get("observationText", ""),
-                    "score": score,
-                    "citation": rec.get("loincCode", ""),
-                })
-            scored.sort(key=lambda x: x["score"], reverse=True)
-            return scored[:top_k]
+            if resp.status_code == 200:
+                for rec in resp.json():
+                    emb_json = rec.get("semanticEmbeddingJson")
+                    score = (
+                        cosine_similarity(query_vec, json.loads(emb_json))
+                        if emb_json
+                        else 0.0
+                    )
+                    scored.append({
+                        "text": rec.get("observationText", ""),
+                        "score": score,
+                        "citation": rec.get("loincCode", ""),
+                        "source": "observation",
+                        "url": "",
+                    })
         except Exception as e:
-            logger.warning("Candidate retrieval failed: %s", e)
-            return []
+            logger.warning("Observation retrieval failed: %s", e)
+
+        # --- EBM knowledge base ---
+        try:
+            resp = httpx.get(
+                f"{self.backend_url}/api/ebm",
+                timeout=10,
+            )
+            if resp.status_code == 200:
+                for entry in resp.json():
+                    emb_json = entry.get("semanticEmbeddingJson")
+                    score = (
+                        cosine_similarity(query_vec, json.loads(emb_json))
+                        if emb_json
+                        else 0.0
+                    )
+                    scored.append({
+                        "text": entry.get("statement", ""),
+                        "score": score,
+                        "citation": entry.get("pmid", ""),
+                        "source": "ebm",
+                        "url": entry.get("articleUrl", ""),
+                    })
+        except Exception as e:
+            logger.warning("EBM retrieval failed: %s", e)
+
+        scored.sort(key=lambda x: x["score"], reverse=True)
+        return scored[:top_k]

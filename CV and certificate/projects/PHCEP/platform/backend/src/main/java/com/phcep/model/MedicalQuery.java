@@ -40,6 +40,13 @@ public class MedicalQuery {
     @Column(columnDefinition = "TEXT")
     private String aiAnswer;
 
+    /** JSON array of per-match ranked results returned by the ML service. */
+    @Column(columnDefinition = "TEXT")
+    private String topKMatchesJson;
+
+    /** Confidence score (0–1) from the ML service for the top match. */
+    private Double confidence;
+
     /** HCP written answer (overrides or supplements AI answer). */
     @Column(columnDefinition = "TEXT")
     private String hcpAnswer;

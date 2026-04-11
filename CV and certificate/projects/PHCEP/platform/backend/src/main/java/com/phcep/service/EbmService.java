@@ -1,9 +1,12 @@
 package com.phcep.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.phcep.model.EbmEntry;
 import com.phcep.repository.EbmEntryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ public class EbmService {
 
     private final EbmEntryRepository ebmEntryRepository;
     private final FastSRService fastSRService;
+    private final ObjectMapper objectMapper;
 
     @Transactional
     public EbmEntry save(EbmEntry entry) {
@@ -29,9 +33,9 @@ public class EbmService {
         try {
             FastSRService.EmbeddingResult emb = fastSRService.encode(entry.getStatement());
             if (emb != null) {
-                entry.setSemanticEmbeddingJson(emb.semantic().toString());
-                entry.setGlobalEmbeddingJson(emb.global().toString());
-                entry.setFragmentEmbeddingJson(emb.fragment().toString());
+                entry.setSemanticEmbeddingJson(toJson(emb.semantic()));
+                entry.setGlobalEmbeddingJson(toJson(emb.global()));
+                entry.setFragmentEmbeddingJson(toJson(emb.fragment()));
             }
         } catch (Exception e) {
             log.warn("FastSR encoding failed for EBM entry: {}", e.getMessage());
@@ -41,6 +45,11 @@ public class EbmService {
 
     public Optional<EbmEntry> findById(UUID id) {
         return ebmEntryRepository.findById(id);
+    }
+
+    /** Return a paginated list of all EBM entries (used by ML query engine for retrieval). */
+    public List<EbmEntry> listAll(Pageable pageable) {
+        return ebmEntryRepository.findAll(pageable).getContent();
     }
 
     public List<EbmEntry> search(String query, int limit) {
@@ -63,5 +72,15 @@ public class EbmService {
     @Transactional
     public void delete(UUID id) {
         ebmEntryRepository.deleteById(id);
+    }
+
+    private String toJson(Object obj) {
+        if (obj == null) return null;
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            log.warn("Failed to serialise embedding to JSON: {}", e.getMessage());
+            return null;
+        }
     }
 }

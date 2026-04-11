@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- ── AI Audit Log ──────────────────────────────────────────────────── -->
+    <changeSet id="002-01" author="phcep">
+        <createTable tableName="ai_audit_log">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="query_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="recipient_token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message_type" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message_content" type="TEXT"/>
+            <column name="confidence" type="DOUBLE PRECISION"/>
+            <column name="top_k_matches_json" type="TEXT"/>
+            <column name="query_text" type="TEXT"/>
+            <column name="sent_at" type="TIMESTAMP" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="ai_audit_log" indexName="idx_audit_query">
+            <column name="query_id"/>
+        </createIndex>
+        <createIndex tableName="ai_audit_log" indexName="idx_audit_token">
+            <column name="recipient_token"/>
+        </createIndex>
+        <createIndex tableName="ai_audit_log" indexName="idx_audit_sent">
+            <column name="sent_at"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

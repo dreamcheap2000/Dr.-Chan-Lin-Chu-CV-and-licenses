@@ -13,9 +13,11 @@ import java.util.UUID;
 
 /**
  * REST controller for medical query submission and retrieval.
- * POST /api/queries        — patient submits a query
- * GET  /api/queries/{id}   — get query details + AI/HCP answer
- * GET  /api/queries/my     — list current user's queries
+ * POST /api/queries              — patient submits a query (accepts optional topK)
+ * GET  /api/queries/{id}         — get query details + AI/HCP answer + top-K matches
+ * GET  /api/queries/my           — list current user's queries
+ * GET  /api/queries/hcp/pending  — HCP: list pending queries
+ * PATCH /api/queries/hcp/{id}/answer — HCP: submit answer
  */
 @RestController
 @RequestMapping("/api/queries")
@@ -27,7 +29,8 @@ public class QueryController {
     @PostMapping
     public ResponseEntity<MedicalQuery> submitQuery(@Valid @RequestBody QueryRequest request,
                                                      @RequestAttribute("pseudonymousToken") String token) {
-        MedicalQuery query = queryService.submitQuery(token, request.queryText(), request.icd10Code());
+        int topK = (request.topK() != null && request.topK() > 0) ? request.topK() : 3;
+        MedicalQuery query = queryService.submitQuery(token, request.queryText(), request.icd10Code(), topK);
         return ResponseEntity.accepted().body(query);
     }
 
@@ -59,6 +62,9 @@ public class QueryController {
         return ResponseEntity.ok(queryService.hcpAnswer(id, req.answer(), req.citations()));
     }
 
-    public record QueryRequest(String queryText, String icd10Code) {}
+    /**
+     * @param topK optional number of ranked matches to return (1–10, default 3)
+     */
+    public record QueryRequest(String queryText, String icd10Code, Integer topK) {}
     public record HcpAnswerRequest(String answer, String citations) {}
 }

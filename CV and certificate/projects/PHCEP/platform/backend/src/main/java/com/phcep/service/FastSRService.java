@@ -16,7 +16,8 @@ import java.util.Map;
  *
  * Endpoints on the ML service:
  *   POST /encode  — returns semantic, global, and fragment embeddings
- *   POST /query   — retrieves top-k answers for a query from user's context
+ *   POST /query   — retrieves top-k ranked answers for a query;
+ *                   includes per-match list, confidence, and escalation flag
  */
 @Service
 @RequiredArgsConstructor
@@ -42,10 +43,11 @@ public class FastSRService {
                 .block();
     }
 
-    public QueryResult query(String pseudonymousToken, String queryText) {
+    public QueryResult query(String pseudonymousToken, String queryText, int topK) {
         Map<String, Object> body = Map.of(
                 "pseudonymous_token", pseudonymousToken,
-                "query_text", queryText
+                "query_text", queryText,
+                "top_k", topK
         );
         return webClientBuilder.build()
                 .post()
@@ -56,12 +58,35 @@ public class FastSRService {
                 .timeout(Duration.ofSeconds(timeoutSeconds))
                 .onErrorResume(e -> {
                     log.warn("FastSR query failed: {}", e.getMessage());
-                    return Mono.just(new QueryResult("", "", 0.0));
+                    return Mono.just(new QueryResult("", "", 0.0, List.of(), true));
                 })
                 .block();
     }
 
+    /** Convenience overload with default top_k = 3. */
+    public QueryResult query(String pseudonymousToken, String queryText) {
+        return query(pseudonymousToken, queryText, 3);
+    }
+
     public record EmbeddingResult(List<Double> semantic, List<Double> global, List<Double> fragment) {}
 
-    public record QueryResult(String answer, String citations, double confidence) {}
+    /** A single ranked match returned by the ML service. */
+    public record MatchItem(int rank, String text, double confidence, String citation, String source, String url) {}
+
+    /**
+     * Full query response from the ML service.
+     *
+     * @param answer       synthesised narrative answer
+     * @param citations    semicolon-separated citations
+     * @param confidence   top match confidence (0–1)
+     * @param matches      per-match ranked list (up to top_k entries)
+     * @param escalated    true when confidence is below the ML threshold
+     */
+    public record QueryResult(
+            String answer,
+            String citations,
+            double confidence,
+            List<MatchItem> matches,
+            boolean escalated) {}
 }
+
