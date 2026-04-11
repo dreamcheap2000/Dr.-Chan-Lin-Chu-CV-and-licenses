@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: phcep-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/phcep
+    username: phcep
+    password: changeme
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  security:
+    jwt:
+      secret: replace-with-256-bit-base64-secret
+      expiration-ms: 86400000
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+phcep:
+  ml:
+    base-url: http://localhost:8081
+    timeout-seconds: 30
+  line:
+    channel-access-token: YOUR_LINE_CHANNEL_ACCESS_TOKEN
+    channel-secret: YOUR_LINE_CHANNEL_SECRET
+    hcp-user-id: ""   # LINE user ID or group ID for HCP notifications (leave blank to disable)
+  deidentification:
+    date-shift-seed: replace-with-secret-seed
+  payment:
+    enabled: false
+    ton:
+      wallet-address: ""
+
+logging:
+  level:
+    com.phcep: DEBUG
+    ca.uhn.fhir: WARN
