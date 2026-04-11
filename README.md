@@ -43,11 +43,15 @@
 
 ## 🔬 研究與 AI 專案（Research & AI Projects）
 
-**[AI-Assisted Post-Stroke Functional Outcome Prediction](https://doi.org/10.3390/diagnostics11101784)**
-`Published`
-Compared and interpreted multiple machine-learning models to predict 30-day and 90-day functional outcomes (Barthel Index) in stroke patients undergoing post-acute care rehabilitation. Features included demographics, stroke severity (NIHSS), and comorbidities.
-*Chang SC*, Chu CL* et al. Diagnostics 2021 — co-first author*
-**Tags:** `Machine Learning` `Stroke Rehabilitation` `Post-Acute Care` `Interpretable AI`
+**[PhD Colab Project — Computational Neuroscience / AI](https://colab.research.google.com/drive/18Vb686m8W-1KtSwoDlT4e3jXcTAsK24Q?usp=share_link)**
+`Ongoing`
+Current PhD research project hosted on Google Colab, exploring computational approaches in neuroscience and AI-assisted clinical applications.
+**Tags:** `PhD Research` `Computational Neuroscience` `Google Colab` `AI`
+
+**[Mathematical Framework](https://docs.google.com/document/d/e/2PACX-1vRRRrZBt85Vmtg0t2EueoAy1NiQol5JJhMzYMfYSmrtd3-Ce0ty1oO0u1awGTHCMUTBA8BW3VGloy2U/pub)**
+`Ongoing`
+A published mathematical framework document underlying the PhD research, providing the theoretical foundation and formal models.
+**Tags:** `Mathematics` `Framework` `PhD Research`
 
 <!-- AUTO-GENERATED:END -->
 

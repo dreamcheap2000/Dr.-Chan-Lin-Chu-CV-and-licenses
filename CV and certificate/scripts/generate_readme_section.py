@@ -11,7 +11,8 @@ except Exception as e:
     ) from e
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
+CV_FOLDER = REPO_ROOT / "CV and certificate"
 README_PATH = REPO_ROOT / "README.md"
 DICT_PATH = REPO_ROOT / ".github" / "translations.yml"
 
@@ -60,7 +61,7 @@ def save_dict(data: dict) -> None:
 def list_certificate_dirs() -> list[Path]:
     """Return certificate category dirs matching 01_… to 09_…"""
     dirs = []
-    for p in sorted(REPO_ROOT.iterdir()):
+    for p in sorted(CV_FOLDER.iterdir()):
         if p.is_dir() and re.match(r"^0[1-9]_", p.name):
             dirs.append(p)
     return dirs
@@ -147,7 +148,7 @@ def build_certificates_section(data: dict) -> tuple[str, list[str]]:
 
 
 def build_work_experience_section() -> str:
-    data_path = REPO_ROOT / "10_Work_Experience" / "work_experience.yml"
+    data_path = CV_FOLDER / "10_Work_Experience" / "work_experience.yml"
     data = load_yaml(data_path)
     if not data or not isinstance(data, list):
         return ""
@@ -175,7 +176,7 @@ def build_work_experience_section() -> str:
 
 
 def build_publications_section() -> str:
-    data_path = REPO_ROOT / "publications" / "publications.yml"
+    data_path = CV_FOLDER / "publications" / "publications.yml"
     data = load_yaml(data_path)
     if not data or not isinstance(data, list):
         return ""
@@ -213,7 +214,7 @@ def build_publications_section() -> str:
 
 
 def build_projects_section() -> str:
-    data_path = REPO_ROOT / "projects" / "projects.yml"
+    data_path = CV_FOLDER / "projects" / "projects.yml"
     data = load_yaml(data_path)
     if not data or not isinstance(data, list):
         return ""
