@@ -37,7 +37,7 @@ const TimelinePage: React.FC = () => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" />
           <YAxis />
-          <Tooltip formatter={(value, name, props) => [`${value} ${props.payload.unit || ''}`, props.payload.label]} />
+          <Tooltip formatter={(value, _name, props) => [`${value} ${props.payload.unit || ''}`, props.payload.label]} />
           <Legend />
           <Line type="monotone" dataKey="value" stroke="#1677ff" dot={true} name="Value" />
         </LineChart>

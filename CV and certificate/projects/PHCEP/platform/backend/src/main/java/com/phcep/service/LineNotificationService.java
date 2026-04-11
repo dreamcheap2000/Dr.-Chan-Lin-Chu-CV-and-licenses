@@ -27,16 +27,22 @@ public class LineNotificationService {
     @Value("${phcep.line.channel-access-token}")
     private String channelAccessToken;
 
+    @Value("${phcep.line.hcp-user-id:}")
+    private String hcpLineUserId;
+
     private static final String LINE_PUSH_URL = "https://api.line.me/v2/bot/message/push";
 
     /** Notify HCP group or admin LINE user about a new pending query. */
     @Async
     public void notifyHcpNewQuery(MedicalQuery query) {
+        if (hcpLineUserId == null || hcpLineUserId.isBlank()) {
+            log.info("HCP LINE user ID not configured; skipping push notification for query {}", query.getId());
+            return;
+        }
         String message = String.format(
                 "[PHCEP] New query awaiting HCP review\nID: %s\nQuery: %s",
                 query.getId(), truncate(query.getQueryText(), 100));
-        // In production: replace with actual HCP LINE user ID or group ID from config
-        sendPush("HCP_LINE_USER_ID_PLACEHOLDER", message);
+        sendPush(hcpLineUserId, message);
     }
 
     /** Notify patient via LINE that their query has been answered. */

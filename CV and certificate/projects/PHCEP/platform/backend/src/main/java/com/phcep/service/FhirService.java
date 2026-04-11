@@ -66,7 +66,7 @@ public class FhirService {
             if (obs.getEffectiveDateTime() != null) {
                 fhirObs.setEffective(new DateTimeType(
                         java.util.Date.from(obs.getEffectiveDateTime()
-                                .atZone(java.time.ZoneId.systemDefault()).toInstant())));
+                                .atZone(java.time.ZoneId.of("UTC")).toInstant())));
             }
 
             // Numeric value + unit

@@ -46,6 +46,7 @@ phcep:
   line:
     channel-access-token: YOUR_LINE_CHANNEL_ACCESS_TOKEN
     channel-secret: YOUR_LINE_CHANNEL_SECRET
+    hcp-user-id: ""   # LINE user ID or group ID for HCP notifications (leave blank to disable)
   deidentification:
     date-shift-seed: replace-with-secret-seed
   payment:
