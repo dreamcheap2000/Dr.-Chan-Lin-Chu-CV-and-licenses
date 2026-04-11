@@ -4,19 +4,19 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - "01_*/*"
-      - "02_*/*"
-      - "03_*/*"
-      - "04_*/*"
-      - "05_*/*"
-      - "06_*/*"
-      - "07_*/*"
-      - "08_*/*"
-      - "09_*/*"
-      - "10_Work_Experience/**"
-      - "publications/**"
-      - "projects/**"
-      - "scripts/**"
+      - "CV and certificate/01_*/*"
+      - "CV and certificate/02_*/*"
+      - "CV and certificate/03_*/*"
+      - "CV and certificate/04_*/*"
+      - "CV and certificate/05_*/*"
+      - "CV and certificate/06_*/*"
+      - "CV and certificate/07_*/*"
+      - "CV and certificate/08_*/*"
+      - "CV and certificate/09_*/*"
+      - "CV and certificate/10_Work_Experience/**"
+      - "CV and certificate/publications/**"
+      - "CV and certificate/projects/**"
+      - "CV and certificate/scripts/**"
       - ".github/translations.yml"
       - "README.md"
   workflow_dispatch: {}
@@ -38,22 +38,35 @@ jobs:
 
       - name: Install deps
         run: |
-          pip install -r scripts/requirements.txt
+          pip install -r "CV and certificate/scripts/requirements.txt"
+
+      - name: Fetch PubMed links
+        run: |
+          python "CV and certificate/scripts/fetch_pubmed_links.py"
+
+      - name: Fetch project files (Colab notebook & Google Doc)
+        run: |
+          python "CV and certificate/scripts/fetch_project_files.py"
 
       - name: Generate README section
         run: |
-          python scripts/generate_readme_section.py
+          python "CV and certificate/scripts/generate_readme_section.py"
 
       - name: Commit changes (if any)
         run: |
           set -e
-          if git diff --quiet; then
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md .github/translations.yml \
+            "CV and certificate/publications/publications.yml"
+          # Add project files only if they were successfully downloaded
+          for f in "CV and certificate/projects/phd_colab_notebook.ipynb" \
+                   "CV and certificate/projects/mathematical_framework.html"; do
+            [ -f "$f" ] && git add "$f"
+          done
+          if git diff --staged --quiet; then
             echo "No changes to commit."
             exit 0
           fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md .github/translations.yml
-          git commit -m "chore: auto-update README expertise summary"
+          git commit -m "chore: auto-update README, publication links, and project files"
           git push

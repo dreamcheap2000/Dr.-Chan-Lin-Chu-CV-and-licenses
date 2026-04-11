@@ -1,0 +1,33 @@
+# Research & AI Projects — 研究專案
+# Edit this file to add or update projects.
+# Supported fields:
+#   title       — project title (required)
+#   description — brief description (optional)
+#   url         — project link, GitHub repo, or paper URL (optional)
+#   image       — URL or repo-relative path to screenshot / figure (optional)
+#   tags        — list of keyword tags (optional)
+#   status      — e.g. "Ongoing", "Published", "Completed" (optional)
+#   note        — extra note (optional)
+
+- title: "PhD Colab Project — Computational Neuroscience / AI"
+  description: >
+    Current PhD research project hosted on Google Colab, exploring computational
+    approaches in neuroscience and AI-assisted clinical applications.
+  url: "https://colab.research.google.com/drive/18Vb686m8W-1KtSwoDlT4e3jXcTAsK24Q?usp=share_link"
+  tags:
+    - PhD Research
+    - Computational Neuroscience
+    - Google Colab
+    - AI
+  status: "Ongoing"
+
+- title: "Mathematical Framework"
+  description: >
+    A published mathematical framework document underlying the PhD research,
+    providing the theoretical foundation and formal models.
+  url: "https://docs.google.com/document/d/e/2PACX-1vRRRrZBt85Vmtg0t2EueoAy1NiQol5JJhMzYMfYSmrtd3-Ce0ty1oO0u1awGTHCMUTBA8BW3VGloy2U/pub"
+  tags:
+    - Mathematics
+    - Framework
+    - PhD Research
+  status: "Ongoing"
