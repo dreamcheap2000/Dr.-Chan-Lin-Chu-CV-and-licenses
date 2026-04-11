@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 import re
 from pathlib import Path
 
@@ -23,18 +22,23 @@ END_MARK = "<!-- AUTO-GENERATED:END -->"
 EXT_TO_STRIP = {".jpg", ".jpeg", ".png", ".pdf"}  # display: no extension anyway
 
 
-def strip_ext(filename: str) -> str:
+def strip_prefix_and_ext(filename: str) -> str:
+    """Return the translation key for a filename.
+
+    Strips the leading ``NN_`` ordering prefix (e.g. ``01_``) and the file
+    extension so that ``01_Physician_License.jpg`` maps to the key
+    ``Physician_License``.
+    """
     p = Path(filename)
-    if p.suffix.lower() in EXT_TO_STRIP:
-        return p.stem
-    # if unknown extension, still strip for display consistency
-    return p.stem
+    stem = p.stem if p.suffix.lower() in EXT_TO_STRIP else p.name
+    # Remove leading numeric order prefix like "01_", "02_", "10_"
+    stem = re.sub(r"^\d+_", "", stem)
+    return stem
 
 
 def humanize_fallback(key: str) -> str:
     # Replace underscores with spaces; keep common acronyms readable.
     s = key.replace("_", " ").strip()
-    # minor cleanup
     s = re.sub(r"\s+", " ", s)
     return f"{s}（未翻譯）"
 
@@ -47,9 +51,16 @@ def load_dict() -> dict:
 
 
 def save_dict(data: dict) -> None:
+    """Write translations.yml with sections in the fixed order:
+    pending → categories → files.
+    """
     DICT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    ordered: dict = {}
+    ordered["pending"] = data.get("pending", {})
+    ordered["categories"] = data.get("categories", {})
+    ordered["files"] = data.get("files", {})
     with DICT_PATH.open("w", encoding="utf-8") as f:
-        yaml.safe_dump(data, f, allow_unicode=True, sort_keys=False)
+        yaml.safe_dump(ordered, f, allow_unicode=True, sort_keys=False)
 
 
 def list_category_dirs() -> list[Path]:
@@ -87,11 +98,11 @@ def build_markdown_section(data: dict) -> tuple[str, list[str]]:
         cat_key = d.name
         cat_title = categories.get(cat_key, cat_key)  # chinese title preferred
 
-        # Collect file names (non-recursive for now)
+        # Files are sorted by their NN_ prefix so display order matches folder order.
         files = [p for p in sorted(d.iterdir()) if p.is_file()]
         items_zh = []
         for fp in files:
-            base = strip_ext(fp.name)
+            base = strip_prefix_and_ext(fp.name)
             zh = translations.get(base)
             if not zh:
                 missing.append(base)
@@ -99,10 +110,9 @@ def build_markdown_section(data: dict) -> tuple[str, list[str]]:
             items_zh.append(zh)
 
         color = colors[idx % len(colors)]
-        # Use shields badge (stable on GitHub)
         badge_label = "分類"
         badge_msg = cat_title
-        # shields expects URL-escaped pieces; keep it simple by replacing spaces with %20
+
         def esc(s: str) -> str:
             return (
                 s.replace("-", "--")
@@ -133,10 +143,10 @@ def build_markdown_section(data: dict) -> tuple[str, list[str]]:
 def upsert_readme_section(readme_text: str, new_section: str) -> str:
     if START_MARK in readme_text and END_MARK in readme_text:
         before, rest = readme_text.split(START_MARK, 1)
-        middle, after = rest.split(END_MARK, 1)
+        _middle, after = rest.split(END_MARK, 1)
         return before + START_MARK + "\n\n" + new_section + "\n" + END_MARK + after
 
-    # If markers not found, append them at top
+    # If markers not found, prepend them
     insert = f"{START_MARK}\n\n{new_section}\n{END_MARK}\n\n"
     return insert + readme_text
 
@@ -145,23 +155,43 @@ def main() -> None:
     data = load_dict()
 
     # Ensure base structure exists
+    data.setdefault("pending", {})
     data.setdefault("categories", {})
     data.setdefault("files", {})
 
-    # Auto-fill category titles if missing (you can edit later)
+    # Promote any pending entries that now have a translation value
+    promoted: list[str] = []
+    for key, value in list(data["pending"].items()):
+        if value:
+            data["files"][key] = value
+            del data["pending"][key]
+            promoted.append(key)
+    if promoted:
+        print(f"Promoted from pending to files: {', '.join(promoted)}")
+
+    # Auto-fill category titles if missing (you can edit translations.yml later)
     default_categories_zh = {
         "01_Core_Licensure_and_Specialty": "核心執照與專科資格",
-        "02_Neuromodulation_TMS_VNS_tPBM": "神經調控",
-        "03_Neurovascular_Endovascular": "腦血管與介入",
-        "04_Ultrasound_Multisystem": "超音波（多系統）",
-        "05_Acute_Care_Emergency": "急性照護",
-        "06_Home_Care_LongTermCare_Community": "居家照護／長照／社區／慢性病防治",
+        "02_Neurovascular_Endovascular": "腦血管與介入",
+        "03_Ultrasound_Multisystem": "超音波（多系統）",
+        "04_Home_Care_LongTermCare_Community": "居家照護／長照／社區／慢性病防治",
+        "05_Neuromodulation_TMS_VNS_tPBM": "神經調控",
+        "06_Acute_Care_Emergency": "急性照護",
         "07_Regulatory": "法規與管制",
         "08_Advanced_Therapies_Cell_Therapy": "進階治療",
         "09_Education_and_Service": "學歷與服務",
     }
     for k, v in default_categories_zh.items():
         data["categories"].setdefault(k, v)
+
+    # Scan folders: add any unknown file keys to pending so they surface in the YAML
+    cat_dirs = list_category_dirs()
+    for d in cat_dirs:
+        for fp in sorted(d.iterdir()):
+            if fp.is_file():
+                key = strip_prefix_and_ext(fp.name)
+                if key not in data["files"] and key not in data["pending"]:
+                    data["pending"][key] = None  # needs translation
 
     new_section, missing = build_markdown_section(data)
 
@@ -172,16 +202,16 @@ def main() -> None:
     updated = upsert_readme_section(old, new_section)
     README_PATH.write_text(updated, encoding="utf-8")
 
-    # Save dictionary (keeps categories normalized)
+    # Save dictionary (pending first, then categories, then files)
     save_dict(data)
 
-    # Print missing translations in CI logs
+    # Report missing translations in CI logs
     if missing:
         unique_missing = sorted(set(missing))
-        print("Missing translations (add to .github/translations.yml under files:):")
+        print("Missing translations (fill values in .github/translations.yml under pending:):")
         for k in unique_missing:
-            print(f" - {k}")
-        # Do not fail; just inform.
+            print(f"  {k}:")
+        # Do not fail the workflow; just inform.
     else:
         print("All filenames translated.")
 
