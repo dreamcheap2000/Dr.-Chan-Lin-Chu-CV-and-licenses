@@ -136,8 +136,9 @@ def build_certificates_section(data: dict) -> tuple[str, list[str]]:
         else:
             cat_cell = f"{emoji} **{zh_name}**"
 
-        files = [p for p in sorted(d.iterdir()) if p.is_file()]
-        items = []
+        jpg_exts = {".jpg", ".jpeg"}
+        files = [p for p in sorted(d.iterdir()) if p.is_file() and p.suffix.lower() in jpg_exts]
+        file_items: list[tuple[str, str]] = []
         for fp in files:
             base = strip_numeric_prefix(strip_ext(fp.name))
             # Promote from pending to files if the user has filled in a translation
@@ -149,7 +150,10 @@ def build_certificates_section(data: dict) -> tuple[str, list[str]]:
                 if base not in pending:
                     pending[base] = None
                 zh = humanize_fallback(base)
-            items.append(zh)
+            file_items.append((zh, fp.name))
+        # Sort shortest → longest by translated text; tie-break: text, then filename
+        file_items.sort(key=lambda t: (len(t[0]), t[0], t[1]))
+        items = [t[0] for t in file_items]
 
         content = "<br>".join(f"• {item}" for item in items) if items else "（無）"
         rows.append(f"| {cat_cell} | {content} |")
