@@ -1,0 +1,96 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: phcep
+      POSTGRES_USER: phcep
+      POSTGRES_PASSWORD: changeme
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U phcep"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ml:
+    build:
+      context: ../platform/ml
+      dockerfile: ../../docker/Dockerfile.ml
+    ports:
+      - "8081:8081"
+    environment:
+      PHCEP_BACKEND_URL: http://backend:8080
+      PHCEP_BASE_MODEL: dmis-lab/biobert-base-cased-v1.2
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  backend:
+    build:
+      context: ../platform/backend
+      dockerfile: ../../docker/Dockerfile.backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/phcep
+      SPRING_DATASOURCE_USERNAME: phcep
+      SPRING_DATASOURCE_PASSWORD: changeme
+      SPRING_DATA_REDIS_HOST: redis
+      PHCEP_ML_BASE_URL: http://ml:8081
+      SPRING_SECURITY_JWT_SECRET: ${JWT_SECRET:-replace-this-in-production-with-256bit-key}
+      PHCEP_LINE_CHANNEL_ACCESS_TOKEN: ${LINE_CHANNEL_ACCESS_TOKEN:-}
+      PHCEP_LINE_CHANNEL_SECRET: ${LINE_CHANNEL_SECRET:-}
+      PHCEP_DEIDENTIFICATION_DATE_SHIFT_SEED: ${DATE_SHIFT_SEED:-replace-this-in-production}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  frontend:
+    image: node:18-alpine
+    working_dir: /app
+    volumes:
+      - ../platform/frontend:/app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_BASE: http://localhost:8080
+    depends_on:
+      - backend
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+
+volumes:
+  pgdata:
