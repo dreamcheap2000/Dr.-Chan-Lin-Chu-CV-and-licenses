@@ -144,7 +144,9 @@ const CategoryBrowserPage: React.FC = () => {
   useEffect(() => {
     fetchEntries();
     fetchSummary(summaryDate);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // Initial load only. fetchEntries is re-triggered by the Apply button;
+  // fetchSummary is re-triggered by handleDateChange.
 
   const handleDateChange = (d: dayjs.Dayjs | null) => {
     if (d) {

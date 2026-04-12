@@ -115,26 +115,18 @@ public class ClinicalEntryService {
         List<Object[]> rows = clinicalEntryRepository.dailySummaryByCategory(sqlDate);
 
         Map<String, Long> byCategory = new LinkedHashMap<>();
-        long totalEbm = 0;
         for (Object[] row : rows) {
             String cat = (String) row[0];
             long cnt = ((Number) row[1]).longValue();
             byCategory.put(cat, cnt);
         }
 
-        // Count EBM entries created on this date (all users)
-        List<ClinicalEntry> all = clinicalEntryRepository.findAll();
-        totalEbm = all.stream()
-                .filter(e -> e.getEntryType() == ClinicalEntry.EntryType.EBM
-                        && e.getInputTimestamp() != null
-                        && e.getInputTimestamp().toLocalDate().equals(date))
-                .count();
+        long totalEbm = clinicalEntryRepository.countEbmByDate(sqlDate);
 
         return Map.of(
                 "date", date.toString(),
                 "byCategory", byCategory,
-                "totalEbm", totalEbm,
-                "abbreviations", abbreviationMasterRepository.findAllByOrderByOccurrenceCountDesc()
+                "totalEbm", totalEbm
         );
     }
 

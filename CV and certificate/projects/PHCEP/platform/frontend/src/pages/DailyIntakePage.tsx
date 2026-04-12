@@ -134,7 +134,8 @@ const DailyIntakePage: React.FC = () => {
     }
   };
 
-  React.useEffect(() => { fetchEntries(); }, []);
+  React.useEffect(() => { fetchEntries(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // Fetch on mount only; the Search button re-fetches with current filters.
 
   const onAdd = async (values: any) => {
     setSubmitting(true);

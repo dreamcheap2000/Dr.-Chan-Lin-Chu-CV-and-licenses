@@ -63,12 +63,16 @@
         <createIndex tableName="clinical_entry" indexName="idx_ce_icd10">
             <column name="icd10_code"/>
         </createIndex>
-        <createIndex tableName="clinical_entry" indexName="idx_ce_gsheet" unique="true">
-            <column name="gsheet_row_id"/>
-        </createIndex>
     </changeSet>
 
-    <!-- ── Abbreviation Master (de-duplicated merged view of all entry maps) ── -->
+    <!-- Partial unique index on gsheet_row_id: allows multiple NULLs (non-sheet entries) -->
+    <changeSet id="003-01b" author="phcep">
+        <sql>
+            CREATE UNIQUE INDEX idx_ce_gsheet
+            ON clinical_entry (gsheet_row_id)
+            WHERE gsheet_row_id IS NOT NULL;
+        </sql>
+    </changeSet>
     <changeSet id="003-02" author="phcep">
         <createTable tableName="abbreviation_master">
             <column name="abbreviation" type="VARCHAR(50)">

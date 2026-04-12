@@ -47,6 +47,14 @@ public interface ClinicalEntryRepository extends JpaRepository<ClinicalEntry, UU
     @Query("SELECT e FROM ClinicalEntry e WHERE e.semanticEmbeddingJson IS NULL ORDER BY e.inputTimestamp ASC")
     List<ClinicalEntry> findUnembedded();
 
+    /** Count EBM entries created on a specific date across all users. */
+    @Query(value = """
+            SELECT COUNT(*) FROM clinical_entry
+            WHERE entry_type = 'EBM'
+              AND DATE(input_timestamp AT TIME ZONE 'UTC') = :date
+            """, nativeQuery = true)
+    long countEbmByDate(@Param("date") java.sql.Date date);
+
     /** For Google Sheets upsert. */
     Optional<ClinicalEntry> findByGsheetRowId(String gsheetRowId);
 

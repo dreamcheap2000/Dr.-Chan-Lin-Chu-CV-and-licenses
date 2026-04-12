@@ -195,10 +195,8 @@ class QueryEngine:
                 "size": 200,
                 "page": 0,
             }
-            if entry_types:
-                # Pass the first entry_type as a filter (API supports one at a time)
-                params["entryType"] = entry_types[0]
-
+            # entry_types filtering is done client-side after retrieval so all
+            # requested types are included without multiple API round-trips.
             resp = httpx.get(
                 f"{self.backend_url}/api/entries",
                 params=params,
@@ -209,15 +207,19 @@ class QueryEngine:
                 # Spring Page returns { content: [...], ... }
                 content = page_data.get("content", page_data) if isinstance(page_data, dict) else page_data
                 for entry in content:
-                    emb_json = entry.get("semanticEmbeddingJson")
-                    # Filter by entry_types if more than one was requested
+                    # Filter by entry_types if specified
                     if entry_types and entry.get("entryType") not in entry_types:
                         continue
-                    score = (
-                        cosine_similarity(query_vec, json.loads(emb_json))
-                        if emb_json
-                        else 0.0
-                    )
+                    emb_json = entry.get("semanticEmbeddingJson")
+                    score = 0.0
+                    if emb_json:
+                        try:
+                            score = cosine_similarity(query_vec, json.loads(emb_json))
+                        except (json.JSONDecodeError, ValueError) as parse_err:
+                            logger.warning(
+                                "Skipping malformed embedding for entry %s: %s",
+                                entry.get("id"), parse_err,
+                            )
                     text = entry.get("rawText", "")
                     if entry.get("ebmStatement"):
                         text = entry["ebmStatement"]

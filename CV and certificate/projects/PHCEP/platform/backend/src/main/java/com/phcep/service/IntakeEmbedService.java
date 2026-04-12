@@ -1,5 +1,7 @@
 package com.phcep.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.phcep.model.ClinicalEntry;
 import com.phcep.repository.ClinicalEntryRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class IntakeEmbedService {
 
     private final ClinicalEntryRepository clinicalEntryRepository;
     private final WebClient.Builder webClientBuilder;
+    private final ObjectMapper objectMapper;
 
     @Value("${phcep.intake-worker.base-url:${phcep.ml.base-url}}")
     private String mlBaseUrl;
@@ -71,7 +74,11 @@ public class IntakeEmbedService {
                     .block();
             if (resp != null && resp.containsKey("semantic")) {
                 List<?> vec = (List<?>) resp.get("semantic");
-                return vec.toString(); // store as JSON array string
+                try {
+                    return objectMapper.writeValueAsString(vec);
+                } catch (JsonProcessingException e) {
+                    log.warn("IntakeEmbedService: failed to serialize embedding vector: {}", e.getMessage());
+                }
             }
         } catch (Exception e) {
             log.warn("IntakeEmbedService.embed failed: {}", e.getMessage());

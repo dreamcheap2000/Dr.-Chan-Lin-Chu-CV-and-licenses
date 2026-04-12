@@ -91,7 +91,8 @@ public class GeminiClassificationService {
             entry.setAbbreviationMap(objectMapper.writeValueAsString(result.abbreviations()));
             clinicalEntryRepository.save(entry);
             abbreviationSyncService.syncEntry(entry);
-            log.debug("Classified entry {} → {} ({:.2f})", entry.getId(), result.category(), result.confidence());
+            log.debug("Classified entry {} → {} ({})", entry.getId(), result.category(),
+                    String.format("%.2f", result.confidence()));
         } catch (Exception e) {
             log.warn("Gemini classification failed for entry {}: {}", entry.getId(), e.getMessage());
         }
