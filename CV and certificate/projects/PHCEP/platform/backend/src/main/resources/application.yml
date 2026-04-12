@@ -43,6 +43,8 @@ phcep:
   ml:
     base-url: http://localhost:8081
     timeout-seconds: 30
+  intake-worker:
+    base-url: http://localhost:8082  # Workflow A embedding worker (defaults to ml.base-url if absent)
   line:
     channel-access-token: YOUR_LINE_CHANNEL_ACCESS_TOKEN
     channel-secret: YOUR_LINE_CHANNEL_SECRET
@@ -53,6 +55,16 @@ phcep:
     enabled: false
     ton:
       wallet-address: ""
+  # ── Workflow A: Gemini classification ──────────────────────────────────────
+  gemini:
+    api-key: ""          # Set via PHCEP_GEMINI_API_KEY env var or replace here
+    model: gemini-1.5-flash
+  # ── Workflow A: Google Sheets sync (optional) ──────────────────────────────
+  google-sheets:
+    spreadsheet-id: ""   # Google Sheets spreadsheet ID (leave blank to disable)
+    range: "Sheet1!A1:Z" # Sheet range to read
+    credentials-path: "" # Path to service-account JSON key file
+    user-token: "GSHEETS_IMPORT"  # Pseudonymous token for imported rows
 
 logging:
   level:
