@@ -9,25 +9,23 @@
 #   status      — e.g. "Ongoing", "Published", "Completed" (optional)
 #   note        — extra note (optional)
 
-- title: "PhD Colab Project — Computational Neuroscience / AI"
+- title: "Colab Project — TV Advertisement Optimization"
   description: >
-    Current PhD research project hosted on Google Colab, exploring computational
-    approaches in neuroscience and AI-assisted clinical applications.
-  url: "https://colab.research.google.com/drive/18Vb686m8W-1KtSwoDlT4e3jXcTAsK24Q?usp=share_link"
+    Research project hosted on Google Colab, focused on optimizing the maximal attainable viewers of TV advertisements for products managed by an advertisement proxy company across multiple U.S. cities. The work develops and elaborates a mathematical framework, detailing the formal formulas and models that underpin viewer maximization strategies.  url: "https://colab.research.google.com/drive/18Vb686m8W-1KtSwoDlT4e3jXcTAsK24Q?usp=share_link"
   tags:
-    - PhD Research
-    - Computational Neuroscience
+    - Advertising Optimization
+    - Mathematical Framework
     - Google Colab
-    - AI
+    - AI Research
   status: "Ongoing"
 
-- title: "Mathematical Framework"
+- title: "Mathematical Framework — TV Advertisement Viewer Optimization"
   description: >
-    A published mathematical framework document underlying the PhD research,
-    providing the theoretical foundation and formal models.
-  url: "https://docs.google.com/document/d/e/2PACX-1vRRRrZBt85Vmtg0t2EueoAy1NiQol5JJhMzYMfYSmrtd3-Ce0ty1oO0u1awGTHCMUTBA8BW3VGloy2U/pub"
+   Formal elaboration of the mathematical formulas and models underlying the Colab project on maximizing attainable TV advertisement viewers. This framework provides the theoretical foundation for optimization strategies applied across multiple U.S. cities, detailing the derivation, assumptions, and structural equations that guide the proxy company’s advertisement allocation decisions.
+   url: "https://docs.google.com/document/d/e/2PACX-1vRRRrZBt85Vmtg0t2EueoAy1NiQol5JJhMzYMfYSmrtd3-Ce0ty1oO0u1awGTHCMUTBA8BW3VGloy2U/pub"
   tags:
-    - Mathematics
-    - Framework
-    - PhD Research
+    - Mathematical Modeling
+    - Optimization Theory
+    - Advertising Analytics
+    - Applied Mathematics
   status: "Ongoing"
