@@ -27,6 +27,8 @@ permissions:
 jobs:
   generate:
     runs-on: ubuntu-latest
+    # Prevent infinite loops: skip runs triggered by this bot's own commits.
+    if: github.actor != 'github-actions[bot]'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,6 +41,12 @@ jobs:
       - name: Install deps
         run: |
           pip install -r "CV and certificate/scripts/requirements.txt"
+
+      - name: Normalize new files (move 02_* uploads → 03_* with NN_ prefix)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          python "CV and certificate/scripts/normalize_new_files.py"
 
       - name: Fetch PubMed links
         run: |
@@ -57,6 +65,8 @@ jobs:
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Stage all certificate folder changes (covers moves/renames from normalize step)
+          git add "CV and certificate/"
           git add README.md .github/translations.yml \
             "CV and certificate/publications/publications.yml"
           # Add project files only if they were successfully downloaded
