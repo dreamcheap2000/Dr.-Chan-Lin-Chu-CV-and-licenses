@@ -50,15 +50,13 @@
 
 ## 🔬 研究與 AI 專案（Research & AI Projects）
 
-**[PhD Colab Project — Computational Neuroscience / AI](https://colab.research.google.com/drive/18Vb686m8W-1KtSwoDlT4e3jXcTAsK24Q?usp=share_link)**
-`Ongoing`
-Current PhD research project hosted on Google Colab, exploring computational approaches in neuroscience and AI-assisted clinical applications.
-**Tags:** `PhD Research` `Computational Neuroscience` `Google Colab` `AI`
+### **Colab Project — TV Advertisement Optimization** `Ongoing`
+Research project hosted on Google Colab, focused on optimizing the maximal attainable viewers of TV advertisements for products managed by an advertisement proxy company across multiple U.S. cities. The work develops and elaborates a mathematical framework, detailing the formal formulas and models that underpin viewer maximization strategies.  url: "https://colab.research.google.com/drive/18Vb686m8W-1KtSwoDlT4e3jXcTAsK24Q?usp=share_link"
+**Tags:** `Advertising Optimization` `Mathematical Framework` `Google Colab` `AI Research`
 
-**[Mathematical Framework](https://docs.google.com/document/d/e/2PACX-1vRRRrZBt85Vmtg0t2EueoAy1NiQol5JJhMzYMfYSmrtd3-Ce0ty1oO0u1awGTHCMUTBA8BW3VGloy2U/pub)**
-`Ongoing`
-A published mathematical framework document underlying the PhD research, providing the theoretical foundation and formal models.
-**Tags:** `Mathematics` `Framework` `PhD Research`
+### **Mathematical Framework — TV Advertisement Viewer Optimization** `Ongoing`
+Formal elaboration of the mathematical formulas and models underlying the Colab project on maximizing attainable TV advertisement viewers. This framework provides the theoretical foundation for optimization strategies applied across multiple U.S. cities, detailing the derivation, assumptions, and structural equations that guide the proxy company’s advertisement allocation decisions. url: "https://docs.google.com/document/d/e/2PACX-1vRRRrZBt85Vmtg0t2EueoAy1NiQol5JJhMzYMfYSmrtd3-Ce0ty1oO0u1awGTHCMUTBA8BW3VGloy2U/pub"
+**Tags:** `Mathematical Modeling` `Optimization Theory` `Advertising Analytics` `Applied Mathematics`
 
 <!-- AUTO-GENERATED:END -->
 
