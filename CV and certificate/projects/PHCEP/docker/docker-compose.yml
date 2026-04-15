@@ -44,6 +44,25 @@ services:
       timeout: 10s
       retries: 3
 
+  intake-worker:
+    build:
+      context: ../platform/ml
+      dockerfile: ../../docker/Dockerfile.ml
+    command: ["uvicorn", "intake_worker:app", "--host", "0.0.0.0", "--port", "8082"]
+    ports:
+      - "8082:8082"
+    environment:
+      PHCEP_BACKEND_URL: http://backend:8080
+      PHCEP_BASE_MODEL: dmis-lab/biobert-base-cased-v1.2
+      INTAKE_WORKER_PORT: "8082"
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/intake/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   backend:
     build:
       context: ../platform/backend
@@ -56,10 +75,14 @@ services:
       SPRING_DATASOURCE_PASSWORD: changeme
       SPRING_DATA_REDIS_HOST: redis
       PHCEP_ML_BASE_URL: http://ml:8081
+      PHCEP_INTAKE_WORKER_URL: http://intake-worker:8082
       SPRING_SECURITY_JWT_SECRET: ${JWT_SECRET}
       PHCEP_LINE_CHANNEL_ACCESS_TOKEN: ${LINE_CHANNEL_ACCESS_TOKEN:-}
       PHCEP_LINE_CHANNEL_SECRET: ${LINE_CHANNEL_SECRET:-}
       PHCEP_DEIDENTIFICATION_DATE_SHIFT_SEED: ${DATE_SHIFT_SEED:-replace-this-in-production}
+      PHCEP_GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      PHCEP_GOOGLE_SHEETS_SPREADSHEET_ID: ${GOOGLE_SHEETS_SPREADSHEET_ID:-}
+      PHCEP_GOOGLE_SHEETS_CREDENTIALS_PATH: ${GOOGLE_SHEETS_CREDENTIALS_PATH:-}
     depends_on:
       postgres:
         condition: service_healthy

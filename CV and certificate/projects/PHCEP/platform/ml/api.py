@@ -39,6 +39,7 @@ class QueryRequest(BaseModel):
     pseudonymous_token: str
     query_text: str
     top_k: int = 3
+    entry_types: Optional[List[str]] = None  # e.g. ["ICD10", "SYMPTOM"]
 
 
 class MatchItem(BaseModel):
@@ -92,6 +93,7 @@ def query(req: QueryRequest):
             pseudonymous_token=req.pseudonymous_token,
             query_text=req.query_text,
             top_k=req.top_k,
+            entry_types=req.entry_types,
         )
         return QueryResponse(
             answer=result["answer"],

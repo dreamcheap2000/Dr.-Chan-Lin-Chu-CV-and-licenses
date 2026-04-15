@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- ── Clinical Entry (Workflow A — Smart Data-Intake Pipeline) ────────── -->
+    <changeSet id="003-01" author="phcep">
+        <createTable tableName="clinical_entry">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <!-- De-identified user reference (via DeIdentificationService) -->
+            <column name="pseudonymous_user_token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- ICD10 | SYMPTOM | EBM | LAB | IMAGING | NOTE -->
+            <column name="entry_type" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="icd10_code" type="VARCHAR(10)"/>
+            <!-- Free-form clinical note / abbreviation-rich text -->
+            <column name="raw_text" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Extracted EBM statement (filled inline or by Gemini) -->
+            <column name="ebm_statement" type="TEXT"/>
+            <!-- Source provenance -->
+            <column name="source_url" type="TEXT"/>
+            <column name="source_name" type="VARCHAR(255)"/>
+            <!-- Temporal traceability -->
+            <column name="exam_date" type="DATE"/>
+            <column name="ebm_extraction_date" type="DATE"/>
+            <column name="input_timestamp" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Gemini auto-classification (filled nightly) -->
+            <column name="gemini_category" type="VARCHAR(100)"/>
+            <column name="gemini_confidence" type="DOUBLE PRECISION"/>
+            <!-- Per-entry abbreviation expansions {"Abbr":"expansion"} (JSONB) -->
+            <column name="abbreviation_map" type="JSONB"/>
+            <!-- FastSR semantic embedding (filled async after creation) -->
+            <column name="semantic_embedding_json" type="TEXT"/>
+            <!-- User-applied tags (PostgreSQL text array stored as JSON list) -->
+            <column name="tags" type="TEXT[]"/>
+            <!-- Idempotency key for Google Sheets row upsert -->
+            <column name="gsheet_row_id" type="VARCHAR(100)"/>
+        </createTable>
+
+        <createIndex tableName="clinical_entry" indexName="idx_ce_user_token">
+            <column name="pseudonymous_user_token"/>
+        </createIndex>
+        <createIndex tableName="clinical_entry" indexName="idx_ce_entry_type">
+            <column name="entry_type"/>
+        </createIndex>
+        <createIndex tableName="clinical_entry" indexName="idx_ce_input_timestamp">
+            <column name="input_timestamp"/>
+        </createIndex>
+        <createIndex tableName="clinical_entry" indexName="idx_ce_gemini_category">
+            <column name="gemini_category"/>
+        </createIndex>
+        <createIndex tableName="clinical_entry" indexName="idx_ce_icd10">
+            <column name="icd10_code"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Partial unique index on gsheet_row_id: allows multiple NULLs (non-sheet entries) -->
+    <changeSet id="003-01b" author="phcep">
+        <sql>
+            CREATE UNIQUE INDEX idx_ce_gsheet
+            ON clinical_entry (gsheet_row_id)
+            WHERE gsheet_row_id IS NOT NULL;
+        </sql>
+    </changeSet>
+    <changeSet id="003-02" author="phcep">
+        <createTable tableName="abbreviation_master">
+            <column name="abbreviation" type="VARCHAR(50)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <!-- Preferred full expansion -->
+            <column name="expansion" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <!-- ICD-10 context this abbreviation most often appears with -->
+            <column name="icd10_context" type="VARCHAR(50)"/>
+            <!-- Number of clinical_entry rows that defined this abbreviation -->
+            <column name="occurrence_count" type="INTEGER" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_seen_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
