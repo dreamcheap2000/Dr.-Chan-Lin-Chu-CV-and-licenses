@@ -10,6 +10,7 @@ import {
   EditOutlined,
   ReadOutlined,
   AppstoreOutlined,
+  FormOutlined,
 } from '@ant-design/icons';
 import QueryPage from './pages/QueryPage';
 import ObservationsPage from './pages/ObservationsPage';
@@ -19,6 +20,7 @@ import AdminPage from './pages/AdminPage';
 import DailyIntakePage from './pages/DailyIntakePage';
 import AbbreviationGlossaryPage from './pages/AbbreviationGlossaryPage';
 import CategoryBrowserPage from './pages/CategoryBrowserPage';
+import SoapNotePage from './pages/SoapNotePage';
 
 const { Header, Sider, Content } = Layout;
 
@@ -31,6 +33,7 @@ const menuItems = [
   // ── Workflow A ──────────────────────────────────────────────────────────────
   { type: 'divider' as const },
   { key: 'intake', icon: <EditOutlined />, label: <Link to="/intake">Daily Intake</Link> },
+  { key: 'soap', icon: <FormOutlined />, label: <Link to="/soap">SOAP 病歷</Link> },
   { key: 'glossary', icon: <ReadOutlined />, label: <Link to="/glossary">Abbreviation Glossary</Link> },
   { key: 'categories', icon: <AppstoreOutlined />, label: <Link to="/categories">Browse by Category</Link> },
 ];
@@ -56,6 +59,7 @@ const App: React.FC = () => (
           <Route path="/admin" element={<AdminPage />} />
           {/* Workflow A */}
           <Route path="/intake" element={<DailyIntakePage />} />
+          <Route path="/soap" element={<SoapNotePage />} />
           <Route path="/glossary" element={<AbbreviationGlossaryPage />} />
           <Route path="/categories" element={<CategoryBrowserPage />} />
         </Routes>

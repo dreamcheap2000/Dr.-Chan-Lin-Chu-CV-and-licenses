@@ -8,5 +8,6 @@
     <include file="classpath:db/changelog/001-initial-schema.xml"/>
     <include file="classpath:db/changelog/002-ai-audit-log.xml"/>
     <include file="classpath:db/changelog/003-clinical-entry.xml"/>
+    <include file="classpath:db/changelog/004-soap-templates.xml"/>
 
 </databaseChangeLog>

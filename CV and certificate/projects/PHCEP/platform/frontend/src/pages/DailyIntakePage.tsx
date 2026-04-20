@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import {
   Form, Input, Select, Button, DatePicker, Table, Typography, Space,
-  message, Tag, Divider, Badge, Card, Tooltip,
+  message, Tag, Divider, Badge, Card, Tooltip, AutoComplete,
 } from 'antd';
 import {
-  PlusOutlined, SearchOutlined, FileTextOutlined, ExperimentOutlined,
+  PlusOutlined, SearchOutlined, FileTextOutlined,
 } from '@ant-design/icons';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import ICD_CN_2023, { icdLabel, icdShortLabel } from '../data/icd_cn_2023';
 
 const { Title, Paragraph, Text } = Typography;
 const { TextArea } = Input;
@@ -106,17 +107,50 @@ const columns = [
   },
 ];
 
+const buildIcdOptions = (q: string) => {
+  if (!q) return [];
+  const lower = q.toLowerCase();
+  return ICD_CN_2023
+    .filter(e =>
+      e.code.toLowerCase().startsWith(lower) ||
+      e.cn.includes(q) ||
+      e.en.toLowerCase().includes(lower),
+    )
+    .slice(0, 20)
+    .map(e => ({ value: icdShortLabel(e), label: icdLabel(e) }));
+};
+
 const DailyIntakePage: React.FC = () => {
   const [form] = Form.useForm();
   const [entries, setEntries] = useState<ClinicalEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  // Multi-ICD state — append mode, not replace
+  const [icdCodes, setIcdCodes] = useState<string[]>([]);
+  const [icdSearch, setIcdSearch] = useState('');
+  const [icdOptions, setIcdOptions] = useState<{ value: string; label: string }[]>([]);
+
   // For the Browse panel
   const [filterType, setFilterType] = useState<string | undefined>();
   const [filterIcd10, setFilterIcd10] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const TOKEN = 'demo-token'; // In production this comes from auth context
+
+  const handleIcdSearch = (val: string) => {
+    setIcdSearch(val);
+    setIcdOptions(buildIcdOptions(val));
+  };
+
+  /** Append selected ICD code — no replacement, no duplicates */
+  const handleIcdSelect = (val: string) => {
+    const code = val.split(' ')[0];
+    if (!icdCodes.includes(code)) {
+      setIcdCodes(prev => [...prev, code]);
+    }
+    setIcdSearch('');
+    setIcdOptions([]);
+  };
 
   const fetchEntries = async () => {
     setLoading(true);
@@ -143,7 +177,8 @@ const DailyIntakePage: React.FC = () => {
       await axios.post('/api/entries', {
         pseudonymousUserToken: TOKEN,
         entryType: values.entryType,
-        icd10Code: values.icd10Code,
+        // Multiple ICD codes stored as comma-separated string
+        icd10Code: icdCodes.length > 0 ? icdCodes.join(', ') : undefined,
         rawText: values.rawText,
         ebmStatement: values.ebmStatement,
         sourceUrl: values.sourceUrl,
@@ -153,6 +188,7 @@ const DailyIntakePage: React.FC = () => {
       });
       message.success('Entry saved — Gemini classification running in the background');
       form.resetFields();
+      setIcdCodes([]);
       fetchEntries();
     } catch {
       message.error('Failed to save entry');
@@ -186,8 +222,27 @@ const DailyIntakePage: React.FC = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item name="icd10Code" label="ICD-10 Code" style={{ minWidth: 120 }}>
-              <Input placeholder="e.g. I63" />
+            <Form.Item name="icd10Code" label="ICD-10 診斷碼（可多選）" style={{ minWidth: 300 }}>
+              <div>
+                <AutoComplete
+                  value={icdSearch}
+                  options={icdOptions}
+                  onSearch={handleIcdSearch}
+                  onSelect={handleIcdSelect}
+                  placeholder="搜尋代碼或中文名稱（可追加多個）"
+                  style={{ width: '100%', marginBottom: 6 }}
+                  allowClear
+                  onClear={() => { setIcdSearch(''); setIcdOptions([]); }}
+                />
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                  {icdCodes.map(code => (
+                    <Tag key={code} closable color="blue"
+                      onClose={() => setIcdCodes(prev => prev.filter(c => c !== code))}>
+                      {code}
+                    </Tag>
+                  ))}
+                </div>
+              </div>
             </Form.Item>
 
             <Form.Item name="examDate" label="Exam Date" style={{ minWidth: 160 }}>
