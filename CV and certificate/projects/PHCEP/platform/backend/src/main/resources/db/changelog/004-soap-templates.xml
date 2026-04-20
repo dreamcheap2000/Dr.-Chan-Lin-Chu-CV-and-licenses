@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- ── SOAP Template (clinician-saved named snippets) ─────────────────── -->
+    <changeSet id="004-01" author="phcep">
+        <createTable tableName="soap_template">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <!--
+                Template name, e.g. "急性腦中風: 標準處置流程".
+                The UI inserts only the text BEFORE the first ":" into the SOAP
+                section, preventing the descriptive suffix from polluting the note.
+            -->
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <!--
+                Clinical category, e.g. "腦血管科 Cerebrovascular".
+                The ghost autocomplete window shows only templates whose category
+                matches the current SOAP note's selected category.
+            -->
+            <column name="category" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <!-- Full template text appended to the SOAP section on selection -->
+            <column name="content" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMPTZ" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="soap_template" indexName="idx_soap_tpl_category">
+            <column name="category"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
