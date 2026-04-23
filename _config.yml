@@ -1,0 +1,16 @@
+title: "Dr. Chan-Lin Chu — CV & Professional Certifications"
+description: "Neurologist · Neuro-interventional physician · CV, professional certifications, work experience, and research projects"
+lang: zh-TW
+
+# Exclude non-web files from the Jekyll build to prevent build timeouts
+# and avoid processing large application source trees
+exclude:
+  - "CV and certificate/projects/PHCEP"
+  - "CV and certificate/scripts"
+  - "CV and certificate/projects/mathematical_framework.html"
+  - "CV and certificate/projects/phd_colab_notebook.ipynb"
+  - "CV and certificate/projects/projects.yml"
+  - "CV and certificate/publications/publications.yml"
+  - ".github"
+  - "Gemfile"
+  - "Gemfile.lock"
