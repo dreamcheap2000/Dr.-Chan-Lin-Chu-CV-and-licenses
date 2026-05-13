@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>朱展霖醫師 – 個人簡介與學術成就</title>
+<style>
+  /* ===== Reset & Base ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:   #1a2d5a;
+    --blue:   #2563eb;
+    --teal:   #0d9488;
+    --gold:   #d97706;
+    --light:  #f0f4ff;
+    --white:  #ffffff;
+    --gray:   #64748b;
+    --border: #cbd5e1;
+    --radius: 12px;
+    --shadow: 0 8px 32px rgba(26,45,90,.18);
+  }
+
+  body {
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    background: #1e293b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px 0 40px;
+  }
+
+  /* ===== Slide Container ===== */
+  .slideshow { width: min(900px, 95vw); }
+
+  .slide {
+    display: none;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    min-height: 540px;
+    padding: 48px 52px;
+    position: relative;
+    animation: fadeIn .35s ease;
+  }
+  .slide.active { display: flex; flex-direction: column; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+
+  /* slide number badge */
+  .slide-num {
+    position: absolute; top: 18px; right: 22px;
+    font-size: .75rem; color: var(--gray); letter-spacing: .05em;
+  }
+
+  /* ===== Navigation ===== */
+  .nav {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; margin-top: 18px;
+  }
+  .nav button {
+    background: var(--blue); color: #fff; border: none;
+    padding: 10px 26px; border-radius: 8px; cursor: pointer;
+    font-size: .95rem; font-family: inherit; transition: background .2s;
+  }
+  .nav button:hover { background: var(--navy); }
+  .nav button:disabled { background: #94a3b8; cursor: default; }
+  .progress {
+    display: flex; gap: 5px;
+  }
+  .progress span {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #94a3b8; transition: background .25s;
+  }
+  .progress span.done { background: var(--blue); }
+
+  /* ===== Shared Typography ===== */
+  h1 { font-size: 2rem; font-weight: 800; color: var(--navy); line-height: 1.25; }
+  h2 { font-size: 1.45rem; font-weight: 700; color: var(--navy); margin-bottom: 20px; }
+  h3 { font-size: 1.1rem; font-weight: 700; color: var(--teal); margin-bottom: 8px; }
+  p, li { font-size: .95rem; color: #334155; line-height: 1.7; }
+  ul { padding-left: 1.2em; }
+  li { margin-bottom: 4px; }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  strong { color: var(--navy); }
+
+  /* ===== Decorative accent line ===== */
+  .accent-line {
+    width: 56px; height: 4px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--teal));
+    margin-bottom: 24px;
+  }
+
+  /* ===== Tag chip ===== */
+  .tag {
+    display: inline-block; background: var(--light); color: var(--blue);
+    border: 1px solid #bfdbfe; border-radius: 20px;
+    padding: 2px 12px; font-size: .8rem; font-weight: 600; margin: 3px 3px 3px 0;
+  }
+
+  /* ===== Two-column layout ===== */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; flex: 1; }
+  .two-col-3-7 { display: grid; grid-template-columns: 3fr 4fr; gap: 28px; flex: 1; }
+
+  /* ===== Card ===== */
+  .card {
+    background: var(--light); border-radius: 10px;
+    padding: 18px 20px; margin-bottom: 14px;
+    border-left: 4px solid var(--blue);
+  }
+  .card.teal  { border-left-color: var(--teal); }
+  .card.gold  { border-left-color: var(--gold); }
+
+  /* ===== Cert image ===== */
+  .cert-img {
+    width: 100%; max-height: 200px; object-fit: contain;
+    border-radius: 8px; border: 1px solid var(--border);
+    background: #f8fafc; padding: 4px;
+  }
+  .cert-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; flex: 1;
+  }
+  .cert-grid.three { grid-template-columns: repeat(3, 1fr); }
+  .cert-item {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .cert-item span {
+    font-size: .75rem; color: var(--gray); text-align: center; line-height: 1.3;
+  }
+
+  /* ===== Timeline ===== */
+  .timeline { flex: 1; overflow: auto; }
+  .tl-row {
+    display: grid; grid-template-columns: 110px 1fr;
+    gap: 12px; margin-bottom: 14px; align-items: start;
+  }
+  .tl-date {
+    font-size: .8rem; font-weight: 700; color: var(--white);
+    background: var(--blue); border-radius: 6px;
+    padding: 4px 8px; text-align: center; line-height: 1.4;
+  }
+  .tl-date.teal  { background: var(--teal); }
+  .tl-date.gold  { background: var(--gold); }
+  .tl-body { font-size: .9rem; color: #334155; line-height: 1.6; }
+  .tl-body strong { color: var(--navy); }
+
+  /* ===== Paper citation box ===== */
+  .citation {
+    background: #eff6ff; border: 1px solid #bfdbfe;
+    border-radius: 8px; padding: 12px 16px; margin-top: 14px;
+    font-size: .82rem; color: #1e40af; line-height: 1.6;
+  }
+  .citation strong { color: #1e3a8a; }
+
+  /* ===== Highlight stat ===== */
+  .stat-row { display: flex; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+  .stat {
+    background: var(--navy); color: #fff; border-radius: 10px;
+    padding: 12px 20px; text-align: center; min-width: 100px;
+  }
+  .stat .num { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+  .stat .lbl { font-size: .72rem; opacity: .85; margin-top: 2px; }
+
+  /* ===== SLIDE 1 – Title ===== */
+  #s1 {
+    background: linear-gradient(135deg, var(--navy) 0%, #1e4080 60%, #0d9488 100%);
+    color: #fff; justify-content: center; align-items: flex-start;
+  }
+  #s1 h1 { color: #fff; font-size: 2.4rem; }
+  #s1 .subtitle { color: #93c5fd; font-size: 1.1rem; margin: 12px 0 6px; }
+  #s1 .affil { color: #cbd5e1; font-size: .9rem; line-height: 1.8; }
+  #s1 .slide-num { color: rgba(255,255,255,.5); }
+  #s1 .badge {
+    display: inline-block; background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.3); border-radius: 20px;
+    padding: 4px 16px; font-size: .82rem; color: #e0f2fe; margin-top: 10px;
+  }
+
+  /* ===== SLIDE 2 – TOC ===== */
+  .toc-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1;
+  }
+  .toc-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: var(--light); border-radius: 8px; padding: 10px 14px;
+    font-size: .88rem; color: #334155;
+  }
+  .toc-num {
+    font-size: .9rem; font-weight: 800; color: var(--blue);
+    min-width: 22px;
+  }
+
+  /* ===== Figure caption ===== */
+  .fig-cap { font-size: .75rem; color: var(--gray); text-align: center; margin-top: 4px; }
+
+  /* ===== Table ===== */
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  th {
+    background: var(--navy); color: #fff;
+    padding: 8px 12px; text-align: left; font-weight: 600;
+  }
+  td { padding: 7px 12px; border-bottom: 1px solid var(--border); color: #334155; }
+  tr:nth-child(even) td { background: #f8fafc; }
+</style>
+</head>
+<body>
+
+<div class="slideshow" id="ss">
+
+  <!-- ======================================================= SLIDE 1 ======= -->
+  <div class="slide active" id="s1">
+    <span class="slide-num">1 / 20</span>
+    <h1>朱展霖 醫師<br><small style="font-size:1.1rem;font-weight:400;color:#93c5fd;">Dr. Chan-Lin Chu, MD</small></h1>
+    <p class="subtitle">神經內科專科醫師 | 介入性神經血管內治療 | 神經肌肉骨骼超音波</p>
+    <p class="affil">
+      🎓 長庚大學 管理研究所博士班（2025/9–）<br>
+      🏥 亞東醫院 居家醫療兼任醫師（2025/8–）<br>
+      🏥 廣川醫院 兼診醫師（2026/2–）
+    </p>
+    <span class="badge">個人履歷 &amp; 學術成就簡報 · 2026</span>
+  </div>
+
+  <!-- ======================================================= SLIDE 2 ======= -->
+  <div class="slide" id="s2">
+    <span class="slide-num">2 / 20</span>
+    <h2>簡報目錄</h2>
+    <div class="accent-line"></div>
+    <div class="toc-grid">
+      <div class="toc-item"><span class="toc-num">01</span>學歷與培訓背景</div>
+      <div class="toc-item"><span class="toc-num">02</span>工作經歷總覽</div>
+      <div class="toc-item"><span class="toc-num">03</span>核心執照與神經科專科</div>
+      <div class="toc-item"><span class="toc-num">04</span>神經重症照護</div>
+      <div class="toc-item"><span class="toc-num">05</span>腦中風後急性後期照護 (PAC) 研究概述</div>
+      <div class="toc-item"><span class="toc-num">06</span>PAC 論文一：步行能力恢復</div>
+      <div class="toc-item"><span class="toc-num">07</span>PAC 論文二：功能恢復型態比較</div>
+      <div class="toc-item"><span class="toc-num">08</span>介入性神經血管內治療訓練</div>
+      <div class="toc-item"><span class="toc-num">09</span>Tentorial DAVF 論文</div>
+      <div class="toc-item"><span class="toc-num">10</span>Spinal DAVF 論文</div>
+      <div class="toc-item"><span class="toc-num">11</span>神經血管內治療證書</div>
+      <div class="toc-item"><span class="toc-num">12</span>神經肌肉骨骼超音波專長</div>
+      <div class="toc-item"><span class="toc-num">13</span>超音波相關證書</div>
+      <div class="toc-item"><span class="toc-num">14</span>診所主治經歷</div>
+      <div class="toc-item"><span class="toc-num">15</span>神經調控治療（TMS / VNS / tPBM）</div>
+      <div class="toc-item"><span class="toc-num">16</span>居家醫療與長期照護</div>
+      <div class="toc-item"><span class="toc-num">17</span>機器學習與 AI 研究</div>
+      <div class="toc-item"><span class="toc-num">18</span>所有發表論文</div>
+      <div class="toc-item"><span class="toc-num">19</span>個人興趣</div>
+      <div class="toc-item"><span class="toc-num">20</span>結語 &amp; 聯絡資訊</div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 3 ======= -->
+  <div class="slide" id="s3">
+    <span class="slide-num">3 / 20</span>
+    <h2>學歷與培訓背景</h2>
+    <div class="accent-line"></div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <h3>🎓 學術學歷</h3>
+          <ul>
+            <li>醫學士（醫學系）</li>
+            <li>長庚大學 智慧醫療新創碩班（2022–2023）</li>
+            <li>長庚大學 管理研究所博士班（2025/9–進修中）</li>
+          </ul>
+        </div>
+        <div class="card teal">
+          <h3>🏥 住院醫師訓練</h3>
+          <ul>
+            <li>神經內科住院醫師訓練</li>
+            <li>神經重症照護 (Neurocritical Care)</li>
+            <li>林口長庚醫院神經內科</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card gold">
+          <h3>🧠 次專科訓練</h3>
+          <ul>
+            <li>介入性神經血管內治療<br>（台北榮總 &amp; 林口長庚，2019–2024）</li>
+            <li>神經肌肉骨骼超音波</li>
+            <li>神經調控治療（TMS / VNS / tPBM）</li>
+            <li>居家醫療照護</li>
+          </ul>
+        </div>
+        <div style="text-align:center; margin-top:8px;">
+          <img src="../09_Education_and_Service/01_University_Diploma.jpg"
+               alt="大學畢業證書" class="cert-img" style="max-height:150px;">
+          <p class="fig-cap">大學畢業證書</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 4 ======= -->
+  <div class="slide" id="s4">
+    <span class="slide-num">4 / 20</span>
+    <h2>工作經歷總覽</h2>
+    <div class="accent-line"></div>
+    <div class="timeline">
+      <div class="tl-row">
+        <span class="tl-date">2026/2–<br>現在</span>
+        <div class="tl-body"><strong>廣川醫院</strong> – 兼診醫師</div>
+      </div>
+      <div class="tl-row">
+        <span class="tl-date">2025/8–<br>現在</span>
+        <div class="tl-body"><strong>亞東醫院</strong> – 居家醫療兼任醫師</div>
+      </div>
+      <div class="tl-row">
+        <span class="tl-date teal">2025/9–<br>現在</span>
+        <div class="tl-body"><strong>長庚大學</strong> – 管理研究所博士班進修</div>
+      </div>
+      <div class="tl-row">
+        <span class="tl-date">2025/4–<br>2026/4</span>
+        <div class="tl-body"><strong>樂生醫院</strong> – 兼診醫師</div>
+      </div>
+      <div class="tl-row">
+        <span class="tl-date gold">2024/8–<br>2026/4</span>
+        <div class="tl-body"><strong>荃康診所</strong> – 院長<br>
+          <span style="font-size:.84rem;color:#64748b;">主治神經骨骼肌肉超音波導引注射治療及檢查（約兩年）</span></div>
+      </div>
+      <div class="tl-row">
+        <span class="tl-date">2024/10–<br>2025/12</span>
+        <div class="tl-body"><strong>凱琳居護所</strong> – 兼任醫師</div>
+      </div>
+      <div class="tl-row">
+        <span class="tl-date teal">2023–<br>2024</span>
+        <div class="tl-body"><strong>振興醫院</strong> – 神經內科主治醫師</div>
+      </div>
+      <div class="tl-row">
+        <span class="tl-date teal">2020–<br>2023</span>
+        <div class="tl-body"><strong>長庚醫院</strong> – 神經內科主治醫師（含 PAC 研究與介入訓練）</div>
+      </div>
+      <div class="tl-row">
+        <span class="tl-date gold">2019–<br>2024</span>
+        <div class="tl-body"><strong>台北榮總 &amp; 林口長庚</strong> – 神經血管內治療受訓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 5 ======= -->
+  <div class="slide" id="s5">
+    <span class="slide-num">5 / 20</span>
+    <h2>核心執照與神經科專科</h2>
+    <div class="accent-line"></div>
+    <div class="cert-grid">
+      <div class="cert-item">
+        <img src="../01_Core_Licensure_and_Specialty/01_Physician_License.jpg"
+             alt="醫師證書" class="cert-img">
+        <span>醫師執照</span>
+      </div>
+      <div class="cert-item">
+        <img src="../01_Core_Licensure_and_Specialty/02_Exam_Pass_Certificate.jpg"
+             alt="醫師考試及格" class="cert-img">
+        <span>醫師考試及格證書</span>
+      </div>
+      <div class="cert-item">
+        <img src="../01_Core_Licensure_and_Specialty/04_Neurology_Board_Certification.jpg"
+             alt="神經科專科醫師" class="cert-img">
+        <span>神經科專科醫師證書</span>
+      </div>
+      <div class="cert-item">
+        <img src="../01_Core_Licensure_and_Specialty/03_Neurocritical_Care_Certification.jpg"
+             alt="神經重症照護認證" class="cert-img">
+        <span>神經重症照護認證</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 6 ======= -->
+  <div class="slide" id="s6">
+    <span class="slide-num">6 / 20</span>
+    <h2>神經重症照護</h2>
+    <div class="accent-line"></div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <h3>🧠 主要照護範疇</h3>
+          <ul>
+            <li>急性缺血性腦中風緊急處置</li>
+            <li>腦出血、蜘蛛膜下腔出血管理</li>
+            <li>神經重症病房照護（Neuro-ICU）</li>
+            <li>急性神經生命支持（ANLS）</li>
+            <li>重症腦電圖（EEG）監測</li>
+          </ul>
+        </div>
+        <div class="card teal">
+          <h3>⚡ 急性中風介入</h3>
+          <ul>
+            <li>靜脈溶栓治療（IV-tPA）</li>
+            <li>機械性取栓術（Mechanical Thrombectomy）</li>
+            <li>顱內動脈瘤線圈栓塞</li>
+          </ul>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="cert-item">
+          <img src="../01_Core_Licensure_and_Specialty/03_Neurocritical_Care_Certification.jpg"
+               alt="神經重症照護認證" class="cert-img" style="max-height:200px;">
+          <span>神經重症照護認證</span>
+        </div>
+        <div class="citation">
+          <strong>ANLS 急性神經生命支持</strong>：取得美國急性神經生命支持課程認證，
+          具備系統性急性神經疾病初步評估與穩定化訓練。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 7 ======= -->
+  <div class="slide" id="s7">
+    <span class="slide-num">7 / 20</span>
+    <h2>腦中風後急性後期照護（PAC）研究概述</h2>
+    <div class="accent-line"></div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">2</div><div class="lbl">PAC 發表論文</div></div>
+      <div class="stat"><div class="num">2</div><div class="lbl">SCI 期刊</div></div>
+      <div class="stat"><div class="num">長庚</div><div class="lbl">研究基地</div></div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <h3>📌 研究背景</h3>
+        <p>台灣自 2014 年起推動腦中風後急性後期照護（Post-Acute Care, PAC）試辦計畫，
+        目的在提供住院復健密集訓練，改善中風病患功能恢復。</p>
+        <br>
+        <p>本研究在長庚體系執行，分析多類型中風病患在 PAC 計畫下的功能預後及恢復型態。</p>
+      </div>
+      <div class="card teal">
+        <h3>🔬 研究設計</h3>
+        <ul>
+          <li>前瞻性 / 回顧性世代研究</li>
+          <li>收案對象：住院 PAC 復健病患</li>
+          <li>評估工具：Barthel Index、FIM</li>
+          <li>探討出血性 vs 缺血性腦中風差異</li>
+          <li>機器學習預測功能預後（合作研究）</li>
+        </ul>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+      <span class="tag">Post-Acute Care</span>
+      <span class="tag">Stroke Rehabilitation</span>
+      <span class="tag">Biomed J</span>
+      <span class="tag">Neuropsychiatr Dis Treat</span>
+      <span class="tag">長庚醫療體系</span>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 8 ======================================================= -->
+  <div class="slide" id="s8">
+    <span class="slide-num">8 / 20</span>
+    <h2>PAC 論文一：中風後步行能力恢復</h2>
+    <div class="accent-line"></div>
+    <div class="two-col-3-7">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card">
+          <h3>📅 期刊</h3>
+          <p><em>Biomedical Journal</em><br>2022 年 7 月</p>
+        </div>
+        <div class="card teal">
+          <h3>🔑 設計</h3>
+          <p>回顧性世代研究<br>長庚醫院 PAC 計畫</p>
+        </div>
+      </div>
+      <div>
+        <div class="card gold" style="margin-bottom:12px;">
+          <h3>📌 主要發現</h3>
+          <ul>
+            <li>PAC 復健計畫顯著改善中風病患步行能力</li>
+            <li>步行能力恢復與整體功能預後高度相關</li>
+            <li>早期介入 PAC 者，步行功能改善更佳</li>
+            <li>不同中風類型對步行恢復速率影響有差異</li>
+          </ul>
+        </div>
+        <div class="citation">
+          <strong>Chu CL</strong>, Lee TH, Chen YP, Ro LS, Hsu JL, Chu YC, Chen CK, Pei YC.
+          <em>Recovery of walking ability in stroke patients through postacute care rehabilitation.</em>
+          <strong>Biomed J.</strong> 2022 Jul 21:S2319-4170(22)00104-4.
+          PMID: <a href="https://pubmed.ncbi.nlm.nih.gov/35872227/" target="_blank">35872227</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 9 ======= -->
+  <div class="slide" id="s9">
+    <span class="slide-num">9 / 20</span>
+    <h2>PAC 論文二：出血性 vs 缺血性中風功能恢復型態</h2>
+    <div class="accent-line"></div>
+    <div class="two-col-3-7">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card">
+          <h3>📅 期刊</h3>
+          <p><em>Neuropsychiatric Disease &amp; Treatment</em><br>2020 年 8 月</p>
+        </div>
+        <div class="card teal">
+          <h3>🔑 樣本</h3>
+          <p>長庚醫院<br>PAC 計畫病患</p>
+        </div>
+      </div>
+      <div>
+        <div class="card gold" style="margin-bottom:12px;">
+          <h3>📌 主要發現</h3>
+          <ul>
+            <li>出血性中風（ICH）vs 缺血性中風的 PAC 功能恢復型態比較</li>
+            <li>ICH 患者在 PAC 中的恢復曲線較陡（early rapid gains）</li>
+            <li>Barthel Index 及 FIM 評估顯示兩組均有顯著進步</li>
+            <li>提供臨床分層照護的實證依據</li>
+          </ul>
+        </div>
+        <div class="citation">
+          <strong>Chu CL</strong>, Chen YP, Chen CCP, Chen CK, Chang HN, Chang CH, Pei YC.
+          <em>Functional Recovery Patterns of Hemorrhagic and Ischemic Stroke Patients Under Post-Acute Care Rehabilitation Program.</em>
+          <strong>Neuropsychiatr Dis Treat.</strong> 2020 Aug 13;16:1975–1985.
+          DOI: <a href="https://doi.org/10.2147/NDT.S261525" target="_blank">10.2147/NDT.S261525</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 10 ======= -->
+  <div class="slide" id="s10">
+    <span class="slide-num">10 / 20</span>
+    <h2>介入性神經血管內治療訓練</h2>
+    <div class="accent-line"></div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <h3>🏥 訓練機構</h3>
+          <ul>
+            <li><strong>林口長庚紀念醫院</strong><br>
+              <span style="font-size:.84rem;color:#64748b;">神經血管內科介入訓練</span></li>
+            <li><strong>台北榮民總醫院</strong><br>
+              <span style="font-size:.84rem;color:#64748b;">神經血管內治療受訓</span></li>
+          </ul>
+        </div>
+        <div class="card teal" style="margin-top:12px;">
+          <h3>⏱ 訓練期間</h3>
+          <p>2019 – 2024（5 年）</p>
+        </div>
+        <div class="card gold" style="margin-top:12px;">
+          <h3>📋 資格認證</h3>
+          <ul>
+            <li>介入性神經血管內治療</li>
+            <li>急性缺血性中風動脈取栓術</li>
+            <li>TSNIS 腦動脈瘤線圈栓塞課程</li>
+          </ul>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="cert-item">
+          <img src="../02_Neurovascular_Endovascular/02_Mechanical_Thrombectomy_Certificate.jpg"
+               alt="機械取栓術資格" class="cert-img" style="max-height:160px;">
+          <span>急性缺血性中風動脈取栓術資格</span>
+        </div>
+        <div class="cert-item">
+          <img src="../02_Neurovascular_Endovascular/03_TSNIS_Coil_Embolization_Certificate.jpg"
+               alt="TSNIS 線圈栓塞" class="cert-img" style="max-height:130px;">
+          <span>台灣神經介入學會腦動脈瘤線圈栓塞課程證書</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 11 ======= -->
+  <div class="slide" id="s11">
+    <span class="slide-num">11 / 20</span>
+    <h2>Tentorial DAVF 論文：硬腦膜動靜脈廔管血管內治療</h2>
+    <div class="accent-line"></div>
+    <div class="two-col-3-7">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card">
+          <h3>📅 期刊</h3>
+          <p><em>Frontiers in Neurology</em><br>2021 年 12 月</p>
+        </div>
+        <div class="card teal">
+          <h3>🔑 設計</h3>
+          <p>病例報告<br>林口長庚醫院</p>
+        </div>
+      </div>
+      <div>
+        <div class="card gold" style="margin-bottom:12px;">
+          <h3>📌 案例重點</h3>
+          <ul>
+            <li>位置：Medial Tentorial DAVF（少見部位）</li>
+            <li>技術：經軟膜動脈硬膜分支（Dural branch of pial artery）入路</li>
+            <li>創新：提出罕見的血管內治療路徑</li>
+            <li>手術成功達成血流阻斷，患者術後恢復良好</li>
+            <li>林口長庚 &amp; 台北榮總神經血管介入合作</li>
+          </ul>
+        </div>
+        <div class="citation">
+          <strong>Chu CL</strong>, Chu YC, Lam CT, Lee TH, Chien SC, Yeh CH, Wu YM, Wong HF.
+          <em>Endovascular Treatment of Medial Tentorial Dural Arteriovenous Fistula Through the Dural Branch of the Pial Artery.</em>
+          <strong>Front Neurol.</strong> 2021 Dec 13;12:736919.
+          PMID: <a href="https://pubmed.ncbi.nlm.nih.gov/34966343/" target="_blank">34966343</a>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+          <span class="tag">DAVF</span>
+          <span class="tag">Tentorial</span>
+          <span class="tag">Endovascular</span>
+          <span class="tag">Pial Artery</span>
+          <span class="tag">Front Neurol 2021</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 12 ======= -->
+  <div class="slide" id="s12">
+    <span class="slide-num">12 / 20</span>
+    <h2>Spinal DAVF 論文：脊髓硬膜動靜脈廔管合併結節性筋膜炎</h2>
+    <div class="accent-line"></div>
+    <div class="two-col-3-7">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="card">
+          <h3>📅 期刊</h3>
+          <p><em>BMC Pediatrics</em><br>2022 年 1 月</p>
+        </div>
+        <div class="card teal">
+          <h3>🔑 設計</h3>
+          <p>青少年病例報告<br>罕見共病</p>
+        </div>
+      </div>
+      <div>
+        <div class="card gold" style="margin-bottom:12px;">
+          <h3>📌 案例重點</h3>
+          <ul>
+            <li>疾病：脊髓硬膜 AV 廔管（Spinal Dural AV Fistula）</li>
+            <li>共病：結節性筋膜炎（Nodular Fasciitis）——首例青少年同時罹患</li>
+            <li>臨床表現：進行性下肢無力、感覺障礙</li>
+            <li>影像：MRI 顯示脊髓水腫、異常血管流空影</li>
+            <li>治療：成功手術 / 血管內治療</li>
+            <li>發表於 BMC Pediatrics，首例青少年案例報告</li>
+          </ul>
+        </div>
+        <div class="citation">
+          <strong>Chu CL</strong>, Lu YJ, Lee TH, Jung SM, Chu YC, Wong HF.
+          <em>Concomitant spinal dural arteriovenous fistula and nodular fasciitis in an adolescent: case report.</em>
+          <strong>BMC Pediatr.</strong> 2022 Jan 8;22(1):30.
+          DOI: <a href="https://doi.org/10.1186/s12887-021-03090-6" target="_blank">10.1186/s12887-021-03090-6</a>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+          <span class="tag">Spinal DAVF</span>
+          <span class="tag">Nodular Fasciitis</span>
+          <span class="tag">Adolescent</span>
+          <span class="tag">BMC Pediatr 2022</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 13 ======= -->
+  <div class="slide" id="s13">
+    <span class="slide-num">13 / 20</span>
+    <h2>神經血管內治療相關證書</h2>
+    <div class="accent-line"></div>
+    <div class="cert-grid three" style="flex:1;">
+      <div class="cert-item">
+        <img src="../02_Neurovascular_Endovascular/02_Mechanical_Thrombectomy_Certificate.jpg"
+             alt="機械取栓" class="cert-img">
+        <span>急性缺血性中風<br>動脈取栓術資格</span>
+      </div>
+      <div class="cert-item">
+        <img src="../02_Neurovascular_Endovascular/03_TSNIS_Coil_Embolization_Certificate.jpg"
+             alt="TSNIS 線圈栓塞" class="cert-img">
+        <span>TSNIS 腦動脈瘤<br>線圈栓塞課程</span>
+      </div>
+      <div class="cert-item" style="justify-content:center;">
+        <div class="card" style="margin:0;text-align:left;width:100%;">
+          <h3>📄 介入性神經血管內治療</h3>
+          <p style="font-size:.85rem;">
+            林口長庚 &amp; 台北榮總雙認證<br>
+            （PDF 格式，詳見原始證書）
+          </p>
+          <br>
+          <ul style="font-size:.83rem;">
+            <li>動脈取栓術</li>
+            <li>腦動脈瘤栓塞</li>
+            <li>DAVF 介入治療</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 14 ======= -->
+  <div class="slide" id="s14">
+    <span class="slide-num">14 / 20</span>
+    <h2>神經肌肉骨骼超音波專長</h2>
+    <div class="accent-line"></div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <h3>🔬 超音波檢查範疇</h3>
+          <ul>
+            <li>周邊神經超音波（神經截面積、回聲特性）</li>
+            <li>肌肉超音波（萎縮、脂肪浸潤評估）</li>
+            <li>關節腔及軟組織掃描</li>
+            <li>肌腱、韌帶病變評估</li>
+          </ul>
+        </div>
+        <div class="card teal" style="margin-top:12px;">
+          <h3>💉 超音波導引注射</h3>
+          <ul>
+            <li>關節腔注射（肩、膝、髖等）</li>
+            <li>神經解套注射（Hydrodissection）</li>
+            <li>板機指、腕隧道、足底筋膜等</li>
+            <li>增生療法（Prolotherapy / PRP）</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card gold">
+          <h3>🏆 多系統超音波認證</h3>
+          <ul>
+            <li>NMUSIT 神經肌肉超音波工作坊</li>
+            <li>USMSIT 肌肉骨骼超音波工作坊</li>
+            <li>疼痛治療超音波課程</li>
+            <li>神經超音波進階課程</li>
+            <li>腸胃超音波進階課程</li>
+            <li>超音波基礎解剖課程</li>
+            <li>急性缺血性中風神經監測超音波認證</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 15 ======= -->
+  <div class="slide" id="s15">
+    <span class="slide-num">15 / 20</span>
+    <h2>超音波相關證書</h2>
+    <div class="accent-line"></div>
+    <div class="cert-grid three" style="flex:1;">
+      <div class="cert-item">
+        <img src="../03_Ultrasound_Multisystem/01_Ultrasound_Pain_Management_Certificate.jpg"
+             alt="疼痛治療超音波" class="cert-img">
+        <span>疼痛治療超音波</span>
+      </div>
+      <div class="cert-item">
+        <img src="../03_Ultrasound_Multisystem/03_Ultrasound_Neuro_Advanced_Course_Certificate.jpg"
+             alt="神經超音波進階" class="cert-img">
+        <span>神經超音波進階課程</span>
+      </div>
+      <div class="cert-item">
+        <img src="../03_Ultrasound_Multisystem/04_Ultrasound_MSK_USMSIT_Workshop_Taiwan_Certificate.jpg"
+             alt="MSK 超音波工作坊" class="cert-img">
+        <span>USMSIT 肌骨超音波工作坊</span>
+      </div>
+      <div class="cert-item">
+        <img src="../03_Ultrasound_Multisystem/05_Ultrasound_Neuromuscular_NMUSIT_Workshop_Taiwan_Certificate.jpg"
+             alt="NMUSIT 神經肌肉超音波" class="cert-img">
+        <span>NMUSIT 神經肌肉超音波工作坊</span>
+      </div>
+      <div class="cert-item">
+        <img src="../03_Ultrasound_Multisystem/06_Ultrasound_Basic_Anatomy_Certificate.jpg"
+             alt="超音波基礎解剖" class="cert-img">
+        <span>超音波基礎解剖課程</span>
+      </div>
+      <div class="cert-item">
+        <img src="../03_Ultrasound_Multisystem/02_Ultrasound_GI_Advanced_Course_Certificate.jpg"
+             alt="腸胃超音波" class="cert-img">
+        <span>腸胃超音波進階課程</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 16 ======= -->
+  <div class="slide" id="s16">
+    <span class="slide-num">16 / 20</span>
+    <h2>診所主治經歷：超音波導引注射治療</h2>
+    <div class="accent-line"></div>
+    <div class="two-col">
+      <div>
+        <div class="card gold">
+          <h3>🏥 荃康診所 院長（2024/8–2026/4）</h3>
+          <p style="margin-top:6px;font-size:.9rem;">約兩年，專職神經骨骼肌肉超音波導引注射治療與檢查</p>
+        </div>
+        <div class="card" style="margin-top:12px;">
+          <h3>🩺 主要治療項目</h3>
+          <ul>
+            <li>周邊神經超音波導引解套注射</li>
+            <li>關節腔類固醇 / 玻尿酸注射</li>
+            <li>增生療法（Prolotherapy）</li>
+            <li>肌腱注射（板機指、足底筋膜）</li>
+            <li>腕隧道症候群注射</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card teal">
+          <h3>🔬 超音波檢查服務</h3>
+          <ul>
+            <li>神經肌肉超音波評估</li>
+            <li>肌肉骨骼疾病即時超音波診斷</li>
+            <li>軟組織腫塊鑑別</li>
+            <li>關節積液評估</li>
+          </ul>
+        </div>
+        <div class="card" style="margin-top:12px;">
+          <h3>👥 主要收治族群</h3>
+          <ul>
+            <li>慢性疼痛患者</li>
+            <li>神經卡壓症候群（CTS、TOS 等）</li>
+            <li>運動員肌腱骨骼傷害</li>
+            <li>老年退化性關節病</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 17 ======= -->
+  <div class="slide" id="s17">
+    <span class="slide-num">17 / 20</span>
+    <h2>神經調控治療（TMS / VNS / tPBM）</h2>
+    <div class="accent-line"></div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <h3>🧲 TMS（重複性經顱磁刺激）</h3>
+          <ul>
+            <li>國際臨床 TMS 認證專家</li>
+            <li>春季 &amp; 秋季研討會證書</li>
+            <li>TMS / EEG 生物標記工作坊</li>
+            <li>應用：憂鬱症、OCD、疼痛調控</li>
+          </ul>
+        </div>
+        <div class="card teal" style="margin-top:12px;">
+          <h3>⚡ VNS（迷走神經刺激）</h3>
+          <ul>
+            <li>VNS 參數設定與劑量調整認證</li>
+            <li>難治型癲癇 / 憂鬱症適應症</li>
+          </ul>
+        </div>
+        <div class="card gold" style="margin-top:12px;">
+          <h3>💡 tPBM（低能量光療）</h3>
+          <ul>
+            <li>tPBM 臨床操作證書</li>
+            <li>神經保護與認知促進</li>
+          </ul>
+        </div>
+      </div>
+      <div class="cert-grid" style="align-content:start;">
+        <div class="cert-item">
+          <img src="../05_Neuromodulation_TMS_VNS_tPBM/04_TMS_International_Clinical_Training_Certificate.jpg"
+               alt="TMS 國際認證" class="cert-img">
+          <span>國際臨床 TMS 認證</span>
+        </div>
+        <div class="cert-item">
+          <img src="../05_Neuromodulation_TMS_VNS_tPBM/05_VNS_Programming_Parameter_Titration_Certification.jpg"
+               alt="VNS 認證" class="cert-img">
+          <span>VNS 參數設定認證</span>
+        </div>
+        <div class="cert-item">
+          <img src="../05_Neuromodulation_TMS_VNS_tPBM/01_tPBM_Clinical_Certificate.jpg"
+               alt="tPBM 證書" class="cert-img">
+          <span>tPBM 臨床證書</span>
+        </div>
+        <div class="cert-item">
+          <img src="../05_Neuromodulation_TMS_VNS_tPBM/06_TMS_EEG_Biomarker_Workshop_Certificate.jpg"
+               alt="TMS/EEG 工作坊" class="cert-img">
+          <span>TMS/EEG 生物標記工作坊</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 18 ======= -->
+  <div class="slide" id="s18">
+    <span class="slide-num">18 / 20</span>
+    <h2>居家醫療與長期照護</h2>
+    <div class="accent-line"></div>
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <h3>🏠 居家醫療服務</h3>
+          <ul>
+            <li>亞東醫院 居家醫療兼任醫師（2025/8–）</li>
+            <li>凱琳居護所 兼任醫師（2024/10–2025/12）</li>
+            <li>居家醫療照護專業人員認證</li>
+            <li>在宅急症照護（Hospital at Home）試辦</li>
+          </ul>
+        </div>
+        <div class="card teal" style="margin-top:12px;">
+          <h3>👴 長照與慢性病管理</h3>
+          <ul>
+            <li>長期照護 Level 1 證書</li>
+            <li>骨質疏鬆專科醫師認證</li>
+            <li>糖尿病共同照護資格</li>
+            <li>成人預防保健資格</li>
+            <li>安寧緩和照護基礎課程</li>
+            <li>戒菸衛教 / 諮詢資格</li>
+          </ul>
+        </div>
+      </div>
+      <div class="cert-grid">
+        <div class="cert-item">
+          <img src="../04_Home_Care_LongTermCare_Community/06_Home_Medical_Care_Professional_Certification.jpg"
+               alt="居家醫療照護認證" class="cert-img">
+          <span>居家醫療照護專業人員認證</span>
+        </div>
+        <div class="cert-item">
+          <img src="../04_Home_Care_LongTermCare_Community/07_Palliative_Care_Foundation_Course_Certificate.jpg"
+               alt="安寧緩和照護" class="cert-img">
+          <span>安寧緩和照護基礎課程</span>
+        </div>
+        <div class="cert-item">
+          <img src="../04_Home_Care_LongTermCare_Community/10_Hospital_at_Home_Acute_Care_Pilot_Certificate.jpg"
+               alt="在宅急症照護" class="cert-img">
+          <span>在宅急症照護試辦證書</span>
+        </div>
+        <div class="cert-item" style="justify-content:center;">
+          <div class="card" style="margin:0;width:100%;">
+            <h3>🔷 另含</h3>
+            <ul style="font-size:.8rem;">
+              <li>糖尿病共同照護</li>
+              <li>成人預防保健</li>
+              <li>骨質疏鬆專科</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 19 ======= -->
+  <div class="slide" id="s19">
+    <span class="slide-num">19 / 20</span>
+    <h2>所有發表論文 &amp; 機器學習研究</h2>
+    <div class="accent-line"></div>
+    <table>
+      <thead>
+        <tr>
+          <th>年份</th>
+          <th>期刊</th>
+          <th>主題</th>
+          <th>角色</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2022</td>
+          <td><em>Biomed J</em></td>
+          <td>PAC 中風步行能力恢復</td>
+          <td>第一作者</td>
+        </tr>
+        <tr>
+          <td>2022</td>
+          <td><em>BMC Pediatr</em></td>
+          <td>青少年脊髓 DAVF + 結節性筋膜炎</td>
+          <td>第一作者</td>
+        </tr>
+        <tr>
+          <td>2021</td>
+          <td><em>Front Neurol</em></td>
+          <td>Medial Tentorial DAVF 血管內治療</td>
+          <td>第一作者</td>
+        </tr>
+        <tr>
+          <td>2021</td>
+          <td><em>Diagnostics</em></td>
+          <td>機器學習預測中風後功能預後</td>
+          <td>共同作者</td>
+        </tr>
+        <tr>
+          <td>2021</td>
+          <td><em>Eur J Neurol</em></td>
+          <td>年輕成人 AIS 取栓術多中心研究</td>
+          <td>共同作者</td>
+        </tr>
+        <tr>
+          <td>2020</td>
+          <td><em>Neuropsychiatr Dis Treat</em></td>
+          <td>ICH vs 缺血性中風 PAC 功能恢復型態</td>
+          <td>第一作者</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="card teal" style="margin-top:16px;">
+      <h3>🤖 AI 研究專案</h3>
+      <p style="font-size:.88rem;">
+        長庚大學智慧醫療碩班（2022–2023）、Google Colab TV 廣告最佳化數學模型、
+        PHCEP 個人健康資訊整合平台（Spring Boot / FHIR / LINE Notify）
+      </p>
+    </div>
+  </div>
+
+  <!-- ======================================================= SLIDE 20 ======= -->
+  <div class="slide" id="s20">
+    <span class="slide-num">20 / 20</span>
+    <h2>個人興趣 &amp; 結語</h2>
+    <div class="accent-line"></div>
+    <div class="two-col">
+      <div>
+        <div class="card gold">
+          <h3>🏋️ 個人興趣</h3>
+          <p>定期前往健身房訓練，維持良好體能狀態。重訓有助於紓解臨床工作壓力、保持身心健康，也與神經肌肉系統的臨床研究方向相輔相成。</p>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <h3>🎯 未來方向</h3>
+          <ul>
+            <li>長庚大學管理所博士研究（智慧醫療 × 管理）</li>
+            <li>居家醫療 / 在宅急症照護體系深耕</li>
+            <li>神經肌肉骨骼超音波導引治療推廣</li>
+            <li>AI / 數位健康應用於神經疾病</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="card teal">
+          <h3>📋 專長總結</h3>
+          <ul>
+            <li>🧠 神經科相關疾病（腦中風、重症）</li>
+            <li>🩺 介入性神經血管內治療</li>
+            <li>🔬 神經肌肉骨骼超音波導引注射</li>
+            <li>⚡ 神經調控治療（TMS / VNS / tPBM）</li>
+            <li>🏠 居家醫療 &amp; 長期照護</li>
+            <li>📊 臨床研究 &amp; AI 醫療應用</li>
+          </ul>
+        </div>
+        <div class="citation" style="margin-top:14px;">
+          <strong>GitHub 履歷倉庫：</strong><br>
+          <a href="https://github.com/dreamcheap2000/Dr.-Chan-Lin-Chu-CV-and-licenses" target="_blank">
+            dreamcheap2000 / Dr.-Chan-Lin-Chu-CV-and-licenses
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /slideshow -->
+
+<!-- Navigation -->
+<div class="nav">
+  <button id="prevBtn" onclick="changeSlide(-1)" disabled>◀ 上一頁</button>
+  <div class="progress" id="prog"></div>
+  <button id="nextBtn" onclick="changeSlide(1)">下一頁 ▶</button>
+</div>
+
+<script>
+  const TOTAL = 20;
+  let cur = 1;
+
+  function buildProg() {
+    const p = document.getElementById('prog');
+    for (let i = 1; i <= TOTAL; i++) {
+      const s = document.createElement('span');
+      s.id = 'dot' + i;
+      p.appendChild(s);
+    }
+  }
+
+  function showSlide(n) {
+    document.getElementById('s' + cur).classList.remove('active');
+    document.getElementById('dot' + cur).classList.remove('done');
+    cur = Math.max(1, Math.min(TOTAL, n));
+    document.getElementById('s' + cur).classList.add('active');
+    for (let i = 1; i <= cur; i++) document.getElementById('dot' + i).classList.add('done');
+    document.getElementById('prevBtn').disabled = cur === 1;
+    document.getElementById('nextBtn').disabled = cur === TOTAL;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function changeSlide(dir) { showSlide(cur + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   changeSlide(-1);
+  });
+
+  buildProg();
+  showSlide(1);
+</script>
+</body>
+</html>
