@@ -193,6 +193,22 @@
 
   /* ===== Figure caption ===== */
   .fig-cap { font-size: .75rem; color: var(--gray); text-align: center; margin-top: 4px; }
+  .figure-gallery {
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .figure-gallery.two { grid-template-columns: 1fr 1fr; }
+  .figure-gallery.three { grid-template-columns: 1fr 1fr 1fr; }
+  .paper-fig {
+    width: 100%;
+    max-height: 120px;
+    object-fit: contain;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    padding: 4px;
+  }
 
   /* ===== Table ===== */
   table { width: 100%; border-collapse: collapse; font-size: .88rem; }
@@ -216,7 +232,7 @@
     <p class="affil">
       🎓 長庚大學 管理研究所博士班（2025/9–）<br>
       🏥 亞東醫院 居家醫療兼任醫師（2025/8–）<br>
-      🏥 廣川醫院 兼診醫師（2026/2–）
+      🏥 臺北市立聯合醫院忠孝院區 兼診醫師（2026/5–）
     </p>
     <span class="badge">個人履歷 &amp; 學術成就簡報 · 2026</span>
   </div>
@@ -300,12 +316,16 @@
     <div class="accent-line"></div>
     <div class="timeline">
       <div class="tl-row">
-        <span class="tl-date">2026/2–<br>現在</span>
-        <div class="tl-body"><strong>廣川醫院</strong> – 兼診醫師</div>
+        <span class="tl-date">2026/5–<br>現在</span>
+        <div class="tl-body"><strong>臺北市立聯合醫院忠孝院區</strong> – 兼診醫師</div>
       </div>
       <div class="tl-row">
         <span class="tl-date">2025/8–<br>現在</span>
         <div class="tl-body"><strong>亞東醫院</strong> – 居家醫療兼任醫師</div>
+      </div>
+      <div class="tl-row">
+        <span class="tl-date">2026/2–<br>2026/4</span>
+        <div class="tl-body"><strong>廣川醫院</strong> – 兼診醫師</div>
       </div>
       <div class="tl-row">
         <span class="tl-date teal">2025/9–<br>現在</span>
@@ -464,8 +484,9 @@
       </div>
       <div>
         <div class="card gold" style="margin-bottom:12px;">
-          <h3>📌 主要發現</h3>
+          <h3>📌 核心概念與主要發現</h3>
           <ul>
+            <li>核心概念：PAC 提供高強度住院復健，可作為步行功能恢復的關鍵治療期</li>
             <li>PAC 復健計畫顯著改善中風病患步行能力</li>
             <li>步行能力恢復與整體功能預後高度相關</li>
             <li>早期介入 PAC 者，步行功能改善更佳</li>
@@ -477,6 +498,10 @@
           <em>Recovery of walking ability in stroke patients through postacute care rehabilitation.</em>
           <strong>Biomed J.</strong> 2022 Jul 21:S2319-4170(22)00104-4.
           PMID: <a href="https://pubmed.ncbi.nlm.nih.gov/35872227/" target="_blank">35872227</a>
+        </div>
+        <div class="figure-gallery two">
+          <img src="./figures/docx_image5.jpg" alt="PAC 步行能力恢復圖" class="paper-fig">
+          <img src="./figures/docx_image6.jpg" alt="PAC 步行能力預測表" class="paper-fig">
         </div>
       </div>
     </div>
@@ -500,8 +525,9 @@
       </div>
       <div>
         <div class="card gold" style="margin-bottom:12px;">
-          <h3>📌 主要發現</h3>
+          <h3>📌 核心概念與主要發現</h3>
           <ul>
+            <li>核心概念：出血性與缺血性中風在 PAC 的恢復軌跡不同，應採分層復健策略</li>
             <li>出血性中風（ICH）vs 缺血性中風的 PAC 功能恢復型態比較</li>
             <li>ICH 患者在 PAC 中的恢復曲線較陡（early rapid gains）</li>
             <li>Barthel Index 及 FIM 評估顯示兩組均有顯著進步</li>
@@ -513,6 +539,9 @@
           <em>Functional Recovery Patterns of Hemorrhagic and Ischemic Stroke Patients Under Post-Acute Care Rehabilitation Program.</em>
           <strong>Neuropsychiatr Dis Treat.</strong> 2020 Aug 13;16:1975–1985.
           DOI: <a href="https://doi.org/10.2147/NDT.S261525" target="_blank">10.2147/NDT.S261525</a>
+        </div>
+        <div class="figure-gallery">
+          <img src="./figures/docx_image4.jpg" alt="ICH 與缺血性中風功能恢復比較圖" class="paper-fig">
         </div>
       </div>
     </div>
@@ -580,8 +609,9 @@
       </div>
       <div>
         <div class="card gold" style="margin-bottom:12px;">
-          <h3>📌 案例重點</h3>
+          <h3>📌 核心概念與案例重點</h3>
           <ul>
+            <li>核心概念：少見 tentorial DAVF 可透過精準入路完成血管內治療與安全閉塞</li>
             <li>位置：Medial Tentorial DAVF（少見部位）</li>
             <li>技術：經軟膜動脈硬膜分支（Dural branch of pial artery）入路</li>
             <li>創新：提出罕見的血管內治療路徑</li>
@@ -601,6 +631,11 @@
           <span class="tag">Endovascular</span>
           <span class="tag">Pial Artery</span>
           <span class="tag">Front Neurol 2021</span>
+        </div>
+        <div class="figure-gallery three">
+          <img src="./figures/docx_image1.jpg" alt="Tentorial DAVF 影像 1" class="paper-fig">
+          <img src="./figures/docx_image2.jpg" alt="Tentorial DAVF 影像 2" class="paper-fig">
+          <img src="./figures/docx_image3.jpg" alt="Tentorial DAVF 影像 3" class="paper-fig">
         </div>
       </div>
     </div>
@@ -624,8 +659,9 @@
       </div>
       <div>
         <div class="card gold" style="margin-bottom:12px;">
-          <h3>📌 案例重點</h3>
+          <h3>📌 核心概念與案例重點</h3>
           <ul>
+            <li>核心概念：辨識罕見共病組合（Spinal DAVF + Nodular Fasciitis）可加速診斷與治療決策</li>
             <li>疾病：脊髓硬膜 AV 廔管（Spinal Dural AV Fistula）</li>
             <li>共病：結節性筋膜炎（Nodular Fasciitis）——首例青少年同時罹患</li>
             <li>臨床表現：進行性下肢無力、感覺障礙</li>
@@ -645,6 +681,11 @@
           <span class="tag">Nodular Fasciitis</span>
           <span class="tag">Adolescent</span>
           <span class="tag">BMC Pediatr 2022</span>
+        </div>
+        <div class="figure-gallery three">
+          <img src="./figures/docx_image7.jpg" alt="Spinal DAVF 影像 1" class="paper-fig">
+          <img src="./figures/docx_image8.jpg" alt="Spinal DAVF 影像 2" class="paper-fig">
+          <img src="./figures/docx_image9.jpg" alt="Spinal DAVF 影像 3" class="paper-fig">
         </div>
       </div>
     </div>
