@@ -20,15 +20,14 @@
 
 | 期間 Period | 機構 Institution | 職稱 Role |
 |:---|:---|:---|
-| **2026/5–** | 臺北市立聯合醫院忠孝院區 | 兼診醫師 |
-| **2025/8–** | 亞東醫院 | 居家醫療兼任醫師 |
+| **2026/5–** | 臺北市立聯合醫院忠孝院區 | 主治醫師 |
 | **2022–** | 長庚大學 | 智慧醫療新創碩班（2022–2023）及管理研究所博班進修（2025/9–） |
 
 ### 過往經歷 (Past Experience)
 
 | 期間 Period | 機構 Institution | 職稱 Role |
 |:---|:---|:---|
-| **2026/2–2026/4** | 廣川醫院 | 兼診醫師 |
+| **2025/8–2026/4** | 亞東醫院 | 居家醫療兼任醫師 |
 | **2025/4–2026/4** | 樂生醫院 | 兼診醫師 |
 | **2024/8–2026/4** | 荃康診所 | 院長 |
 | **2024/10–2025/12** | 凱琳居護所 | 兼任醫師 |
@@ -39,9 +38,9 @@
 
 1. Chu CL, Lee TH, Chen YP, Ro LS, Hsu JL, Chu YC, Chen CK, Pei YC. [Recovery of walking ability in stroke patients through postacute care rehabilitation.](https://pubmed.ncbi.nlm.nih.gov/35872227/) *Biomed J*. 2022 Jul 21:S2319-4170(22)00104-4. PMID: 35872227.
 
-2. Chu CL, Chen YP, Chen CCP, Chen CK, Chang HN, Chang CH, Pei YC. [Functional Recovery Patterns of Hemorrhagic and Ischemic Stroke Patients Under Post-Acute Care Rehabilitation Program.](https://doi.org/10.2147/NDT.S261525) *Neuropsychiatr Dis Treat*. 2020 Aug 13;16:1975–1985.
+2. Chu CL, Chen YP, Chen CCP, Chen CK, Chang HN, Chang CH, Pei YC. [Functional Recovery Patterns of Hemorrhagic and Ischemic Stroke Patients Under Post-Acute Care Rehabilitation Program.](https://pubmed.ncbi.nlm.nih.gov/32884273/) *Neuropsychiatr Dis Treat*. 2020 Aug 13;16:1975–1985. PMID: 32884273.
 
-3. Chu CL, Lu YJ, Lee TH, Jung SM, Chu YC, Wong HF. [Concomitant spinal dural arteriovenous fistula and nodular fasciitis in an adolescent: case report.](https://doi.org/10.1186/s12887-021-03090-6) *BMC Pediatr*. 2022 Jan 8;22(1):30.
+3. Chu CL, Lu YJ, Lee TH, Jung SM, Chu YC, Wong HF. [Concomitant spinal dural arteriovenous fistula and nodular fasciitis in an adolescent: case report.](https://pubmed.ncbi.nlm.nih.gov/34998361/) *BMC Pediatr*. 2022 Jan 8;22(1):30. PMID: 34998361.
 
 4. Chu CL, Chu YC, Lam CT, Lee TH, Chien SC, Yeh CH, Wu YM, Wong HF. [Endovascular Treatment of Medial Tentorial Dural Arteriovenous Fistula Through the Dural Branch of the Pial Artery.](https://pubmed.ncbi.nlm.nih.gov/34966343/) *Front Neurol*. 2021 Dec 13;12:736919. PMID: 34966343.
 
