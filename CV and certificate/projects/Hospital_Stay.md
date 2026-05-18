@@ -5,6 +5,8 @@
 > **Reference**: `個案34：為什麼有些病人住院比較久？.pdf`  
 > **Analyst**: Dr. Chan-Lin Chu
 
+> **Supplementary clustered-model files**: [`Hospital_stay_analysis.md`](./Hospital_stay_analysis.md), [`Hospital_stay_residuals.md`](./Hospital_stay_residuals.md), [`Hospital_stay_residuals.csv`](./Hospital_stay_residuals.csv)
+
 ---
 
 ## Table of Contents
