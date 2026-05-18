@@ -5,7 +5,7 @@
 
 ## 1. Residual-distribution summary
 
-| Model | Mean | SD | Q1 | Median | Q3 | Min | Max | Skewness | Kurtosis | |r| > 2 | |r| > 3 |
+| Model | Mean | SD | Q1 | Median | Q3 | Min | Max | Skewness | Kurtosis | abs(r)>2 | abs(r)>3 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Mixed model standardized residual | -0.000 | 0.975 | -0.596 | 0.022 | 0.629 | -9.895 | 4.023 | -0.466 | 3.389 | 160 | 15 |
 | GEE Pearson residual | 0.007 | 0.582 | -0.351 | 0.012 | 0.392 | -6.031 | 2.320 | -0.459 | 3.452 | 7 | 2 |
