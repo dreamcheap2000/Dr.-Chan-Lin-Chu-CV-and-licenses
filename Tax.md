@@ -1,8 +1,8 @@
 # 114年度綜所稅兩份試算表之比較與評估
 
 > 依據檔案：
-> 1. `/home/runner/work/Dr.-Chan-Lin-Chu-CV-and-licenses/Dr.-Chan-Lin-Chu-CV-and-licenses/CV and certificate/projects/114年綜所稅試算(診所+個人)申報版.pdf`
-> 2. `/home/runner/work/Dr.-Chan-Lin-Chu-CV-and-licenses/Dr.-Chan-Lin-Chu-CV-and-licenses/CV and certificate/projects/114年綜所稅試算(診所+沒有其他2筆+沒有個人).pdf`
+> 1. `CV and certificate/projects/114年綜所稅試算(診所+個人)申報版.pdf`
+> 2. `CV and certificate/projects/114年綜所稅試算(診所+沒有其他2筆+沒有個人).pdf`
 >
 > 以下是依兩份 PDF 內容所做的文件分析，不是正式法律或稅務意見；若要作為對老闆請款或協商依據，仍建議再由會計師或報稅代理人確認。
 
@@ -16,7 +16,7 @@
 
 ### 2. 老闆說的：
 
-- **`904,547 / 2 = 452,273`**
+- **老闆口頭主張：`904,547 / 2 = 452,273`**
 
 這個說法**只有在一個很特定的前提下才勉強成立**：  
 即雙方約定的是「**用第二份 PDF 的整體診所所得稅額**，由診所補貼一半」。
