@@ -14,7 +14,7 @@
 
 - The mixed-model standardized residuals are centered near zero and mostly contained within ±2, but a few extreme negative residuals remain.
 - The GEE Pearson residuals tell the same story, which means the remaining misfit is concentrated in the same outlying admissions rather than spread across the full sample.
-- Both residual sets are left-tailed because a handful of admissions stayed much longer than the models predicted.
+- Both residual sets are left-tailed because a handful of admissions were predicted to stay even longer than they actually did, creating large negative residuals.
 
 ## 2. Largest positive mixed-model residuals
 

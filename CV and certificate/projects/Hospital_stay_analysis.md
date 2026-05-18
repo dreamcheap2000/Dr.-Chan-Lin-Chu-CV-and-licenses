@@ -11,7 +11,7 @@
 1. **Random-intercept mixed-effects model** on `log(LOS + 1)`.
 2. **Generalized estimating equation (GEE)** with an exchangeable working correlation on `log(LOS + 1)`.
 
-Because the workbook does not contain an explicit physician ID, both models use a **physician proxy cluster** defined as `round(drage - tenure, 3) + '_' + drsex`. This approximates a stable physician signature from age-at-start-practice plus physician sex.
+Because the workbook does not contain an explicit physician ID, both models use a **physician proxy cluster** defined as the string concatenation of `round(drage - tenure, 3)`, an underscore, and `drsex`. This approximates a stable physician signature from age-at-start-practice plus physician sex.
 
 - Clusters: **572**
 - Mean cluster size: **7.07**
@@ -69,6 +69,8 @@ Because the workbook does not contain an explicit physician ID, both models use 
 | drage | 0.004 | 0.004 | 0.270 | 0.4% | 0.004 | 0.004 | 0.303 | 0.4% |
 | tenure | -0.007 | 0.004 | 0.079 | -0.7% | -0.006 | 0.004 | 0.125 | -0.6% |
 | charlson | -0.015 | 0.005 | 0.001 | -1.5% | -0.015 | 0.005 | 0.004 | -1.5% |
+
+Department legend: `T.2 = 外科`, `T.3 = 兒科`, `T.4 = 感染科`, `T.5 = 婦科`, `T.6 = 腫瘤科`, `T.7 = 其他`.
 
 ### Short reading of the coefficient table
 
